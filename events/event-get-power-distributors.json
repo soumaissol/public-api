@@ -1,0 +1,6 @@
+{
+    "httpMethod": "GET",
+    "pathParameters": {
+        "zip": "01141000"
+    }
+}

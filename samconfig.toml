@@ -1,0 +1,12 @@
+version = 0.1
+[default]
+[default.deploy]
+[default.deploy.parameters]
+stack_name = "soumaissol-simulation"
+s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-xiotwx7nq8hn"
+s3_prefix = "soumaissol-simulation"
+region = "sa-east-1"
+profile = "solar"
+capabilities = "CAPABILITY_IAM"
+disable_rollback = true
+image_repositories = []

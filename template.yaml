@@ -1,0 +1,55 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: >-
+  simulation-api
+
+Transform:
+- AWS::Serverless-2016-10-31
+
+Resources:
+  SimulationApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
+      Cors:
+        AllowMethods: "'POST, GET'"
+        AllowHeaders: "'X-Forwarded-For'"
+        AllowOrigin: "'*'"
+
+  GetPowerDistributors:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/handlers/get-power-distributors.getPowerDistributorsHandler
+      Runtime: nodejs16.x
+      Architectures:
+        - x86_64
+      MemorySize: 128
+      Timeout: 100
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            RestApiId: !Ref SimulationApi
+            Path: /simulations/power-distributors/{zip}
+            Method: GET
+
+  CalculateFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/handlers/calculate.calculateHandler
+      Runtime: nodejs16.x
+      Architectures:
+        - x86_64
+      MemorySize: 128
+      Timeout: 100
+      Policies:
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            RestApiId: !Ref SimulationApi
+            Path: /simulations/calculate
+            Method: POST
+Outputs:
+  WebEndpoint:
+    Description: "API Gateway endpoint URL for Prod stage"
+    Value: !Sub "https://${SimulationApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
