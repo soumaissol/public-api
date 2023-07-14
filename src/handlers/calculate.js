@@ -11,7 +11,7 @@ const schema = object().shape({
 /**
  * A simple example includes a HTTP post method to add one item to a DynamoDB table.
  */
-export const calculateHandler = async (event) => {
+export const calculateHandler = async(event) => {
   if (event.httpMethod !== "POST") {
     throw new Error(
       `calculateHandler only accepts POST method, you tried: ${event.httpMethod} method.`
@@ -42,8 +42,7 @@ export const calculateHandler = async (event) => {
   let response = {};
 
   const result = await fetch(
-    "https://www.portalsolar.com.br/api/v1/simulations/calculate",
-    {
+    "https://www.portalsolar.com.br/api/v1/simulations/calculate", {
       method: "POST",
       body: JSON.stringify({
         simulation: {
@@ -63,7 +62,11 @@ export const calculateHandler = async (event) => {
   console.log("Response: " + responseBody);
   try {
     responseBody = JSON.parse(responseBody);
-    response.body = JSON.stringify(responseBody);
+    response.body = JSON.stringify({
+      monthlyLoanInstallmentAmount: 200.45,
+      monthlyLoanInstallments: 60,
+      paybackInMonths: 50
+    });
   } catch (e) {
     console.error("Failed to parse response body", e);
     response.body = "Erro inesperado";

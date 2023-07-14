@@ -19,6 +19,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: src/handlers/get-power-distributors.getPowerDistributorsHandler
+      FunctionName: PublicApi-GetPowerDistributors
       Runtime: nodejs16.x
       Architectures:
         - x86_64
@@ -32,10 +33,11 @@ Resources:
             Path: /simulations/power-distributors/{zip}
             Method: GET
 
-  CalculateFunction:
+  Calculate:
     Type: AWS::Serverless::Function
     Properties:
       Handler: src/handlers/calculate.calculateHandler
+      FunctionName: PublicApi-Calculate
       Runtime: nodejs16.x
       Architectures:
         - x86_64

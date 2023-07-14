@@ -14,7 +14,7 @@
     },
     "scripts": {
         "test": "jest",
-        "invoke:calculate": "sam local invoke -t template.yaml -e events/event-calculate.json -n env.json CalculateFunction",
+        "invoke:calculate": "sam local invoke -t template.yaml -e events/event-calculate.json -n env.json Calculate",
         "invoke:distributors": "sam local invoke -t template.yaml -e events/event-get-power-distributors.json -n env.json GetPowerDistributors"
     }
 }
