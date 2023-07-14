@@ -1,1 +1,1 @@
-sam deploy -g --profile solar --region sa-east-1 --stack-name soumaissol-simulation
+sam deploy -g --profile soumaissol --region us-east-1 --stack-name public-api
