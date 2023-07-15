@@ -1,13 +1,14 @@
-import fetch from "node-fetch";
+import HttpStatus from 'http-status-codes';
+import axios from 'axios';
 
 export const getPowerDistributorsHandler = async (event) => {
-  if (event.httpMethod !== "GET") {
+  if (event.httpMethod !== 'GET') {
     throw new Error(
       `getPowerDistributorsHandler only accept GET method, you tried: ${event.httpMethod}`
     );
   }
 
-  console.info("received:", event);
+  console.info('received:', event);
   const params = event.pathParameters || {};
   if (!params.zip) {
     throw new Error(
@@ -17,29 +18,26 @@ export const getPowerDistributorsHandler = async (event) => {
     );
   }
 
-  let response = {};
+  let response: any = {};
 
-  const result = await fetch(
+  const result = await axios.get(
     `https://www.portalsolar.com.br/api/v1/simulations/power_distributors?postalcode=${params.zip}`,
     {
-      method: "GET",
       headers: {
-        Accept: "application/json",
+        Accept: 'application/json',
       },
     }
   );
 
-  let responseBody = await result.text();
-  console.log("Response: " + responseBody);
+  console.log('Response: ' + JSON.stringify(result.data));
   try {
-    responseBody = JSON.parse(responseBody);
-    response.body = JSON.stringify(responseBody);
+    response.body = JSON.stringify(result.data);
   } catch (e) {
-    console.error("Failed to parse response body", e);
-    response.body = "Erro inesperado";
+    console.error('Failed to parse response body', e);
+    response.body = 'Erro inesperado';
   }
 
-  if (!result.ok) {
+  if (result.status !== HttpStatus.OK) {
     response.statusCode = result.status || 500;
   } else {
     response.statusCode = 200;

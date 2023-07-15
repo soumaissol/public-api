@@ -18,7 +18,7 @@ Resources:
   GetPowerDistributors:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: src/handlers/get-power-distributors.getPowerDistributorsHandler
+      Handler: dist/src/handlers/get-power-distributors.getPowerDistributorsHandler
       FunctionName: PublicApi-GetPowerDistributors
       Runtime: nodejs16.x
       Architectures:
@@ -32,11 +32,20 @@ Resources:
             RestApiId: !Ref SimulationApi
             Path: /simulations/power-distributors/{zip}
             Method: GET
+    Metadata:
+      BuildMethod: esbuild
+      BuildProperties:
+        Minify: true
+        Target: "es2020"
+        Sourcemap: true
+        EntryPoints:
+          - src/handlers/get-power-distributors.ts
+
 
   Calculate:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: src/handlers/calculate.calculateHandler
+      Handler: dist/src/handlers/calculate.calculateHandler
       FunctionName: PublicApi-Calculate
       Runtime: nodejs16.x
       Architectures:
@@ -51,6 +60,13 @@ Resources:
             RestApiId: !Ref SimulationApi
             Path: /simulations/calculate
             Method: POST
+    Metadata:
+      BuildMethod: esbuild
+      BuildProperties:
+        Target: "es2020"
+        Sourcemap: true
+        EntryPoints:
+          - src/handlers/calculate.ts
 Outputs:
   WebEndpoint:
     Description: "API Gateway endpoint URL for Prod stage"
