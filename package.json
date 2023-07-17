@@ -22,6 +22,7 @@
   },
   "scripts": {
     "build": "tsc && sam build",
+    "start": "sam local start-api -t template.yaml",
     "test": "tsc && jest",
     "invoke:calculate": "sam local invoke -t template.yaml -e events/event-calculate.json -n env.json PublicApi-Calculate",
     "invoke:distributors": "sam local invoke -t template.yaml -e events/event-get-power-distributors.json -n env.json PublicApi-GetPowerDistributors"
