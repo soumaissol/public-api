@@ -1,6 +1,6 @@
 interface LoanOption {
-  installments: number
-  fixedMonthlyAmount: number
+  installments: number;
+  fixedMonthlyAmount: number;
 }
 
 class LendingCompany {
@@ -11,9 +11,10 @@ class LendingCompany {
   }
 
   simulateFixedMonthlyLoanInstallmentOptions(totalAmmount): LoanOption[] {
-    const simulationOptions = [];
+    const simulationOptions: LoanOption[] = [];
     this.installmentOptions.forEach((installmentOption) => {
-      const fixedMonthlyAmount = totalAmmount * this.lendingMonthlyFee * Math.pow(1 + this.lendingMonthlyFee, installmentOption) / (Math.pow(1 + this.lendingMonthlyFee, installmentOption) - 1);
+      const monthlyFeeExponent = (1 + this.lendingMonthlyFee) ** installmentOption;
+      const fixedMonthlyAmount = totalAmmount * this.lendingMonthlyFee * monthlyFeeExponent / (monthlyFeeExponent - 1);
       simulationOptions.push({
         installments: installmentOption,
         fixedMonthlyAmount: Math.round(fixedMonthlyAmount * 100) / 100,

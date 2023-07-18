@@ -1,6 +1,6 @@
-import { LendingCompany } from '../../../../src/domain/entity/lending-company';
+import {LendingCompany} from '../../../../src/domain/entity/lending-company';
 import Client from '../../../../src/domain/entity/client';
-import { Simulation } from '../../../../src/domain/entity/simulation';
+import {Simulation} from '../../../../src/domain/entity/simulation';
 
 describe('Test Simulation', () => {
   it('should simulate for client and return the best option', () => {

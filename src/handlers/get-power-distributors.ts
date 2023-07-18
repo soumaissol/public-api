@@ -4,7 +4,7 @@ import axios from 'axios';
 export const getPowerDistributorsHandler = async (event) => {
   if (event.httpMethod !== 'GET') {
     throw new Error(
-      `getPowerDistributorsHandler only accept GET method, you tried: ${event.httpMethod}`
+      `getPowerDistributorsHandler only accept GET method, you tried: ${event.httpMethod}`,
     );
   }
 
@@ -13,12 +13,12 @@ export const getPowerDistributorsHandler = async (event) => {
   if (!params.zip) {
     throw new Error(
       `Path param 'zip' is required. Received, you tried: ${JSON.stringify(
-        params
-      )}`
+        params,
+      )}`,
     );
   }
 
-  let response: any = {};
+  const response: any = {};
 
   const result = await axios.get(
     `https://www.portalsolar.com.br/api/v1/simulations/power_distributors?postalcode=${params.zip}`,
@@ -26,10 +26,10 @@ export const getPowerDistributorsHandler = async (event) => {
       headers: {
         Accept: 'application/json',
       },
-    }
+    },
   );
 
-  console.log('Response: ' + JSON.stringify(result.data));
+  console.log(`Response: ${JSON.stringify(result.data)}`);
   try {
     response.body = JSON.stringify(result.data);
   } catch (e) {
@@ -45,7 +45,7 @@ export const getPowerDistributorsHandler = async (event) => {
 
   // All log statements are written to CloudWatch
   console.info(
-    `response from: ${event.path} statusCode: ${response.statusCode} body: ${response.body}`
+    `response from: ${event.path} statusCode: ${response.statusCode} body: ${response.body}`,
   );
   return response;
 };
