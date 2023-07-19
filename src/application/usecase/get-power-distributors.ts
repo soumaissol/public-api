@@ -1,7 +1,3 @@
-import Client from '../../domain/entity/client';
-import { LendingCompany } from '../../domain/entity/lending-company';
-import { Simulation } from '../../domain/entity/simulation';
-import SolarEnergyInstalation from '../../domain/entity/solar-energy-instalation';
 import SolarEnergyGateway from '../../infra/solar-energy-gateway/solar-energy-gateway';
 import Logger from '../logger/logger';
 import { convertAndValidateInput } from '../dto/input/common-input';

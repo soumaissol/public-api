@@ -29,14 +29,12 @@
   "scripts": {
     "build": "tsc && sam build",
     "start": "sam local start-api -t template.yaml",
-    "test": "tsc && jest",
-    "test-with-coverage": "tsc && jest --collectCoverage",
+    "test": "tsc && jest .*\\\\.test\\\\.js$",
+    "test-with-coverage": "tsc && jest .*\\\\.test\\\\.js$ --collectCoverage",
+    "integration-test": "tsc && jest .*\\\\.integration-test\\\\.js$",
     "lint": "eslint . --ext .ts",
     "fix-lint": "eslint . --ext .ts --fix",
     "invoke:calculateSimulation": "sam local invoke -t template.yaml -e events/event-calculate.json -n env.json PublicApi-CalculateSimulation",
     "invoke:distributors": "sam local invoke -t template.yaml -e events/event-get-power-distributors.json -n env.json PublicApi-GetPowerDistributors"
-  },
-  "jest": {
-    "testRegex": ".*\\.test\\.js$"
   }
 }

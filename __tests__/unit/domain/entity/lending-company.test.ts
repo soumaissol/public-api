@@ -1,4 +1,4 @@
-import {LendingCompany} from '../../../../src/domain/entity/lending-company';
+import { LendingCompany } from '../../../../src/domain/entity/lending-company';
 
 describe('Test LendingCompany', () => {
   it('should simulate fixedMonthlyAmount for all options', () => {
