@@ -4,17 +4,16 @@ import { Simulation } from '../../domain/entity/simulation';
 import SolarEnergyInstalation from '../../domain/entity/solar-energy-instalation';
 import SolarEnergyGateway from '../../infra/solar-energy-gateway/solar-energy-gateway';
 import Logger from '../logger/logger';
-
-import CalulateSimulationInput from './dto/input/calculate-simulation-input';
-import { convertAndValidatInput } from './dto/input/common-input';
-import CalulateSimulationOutput from './dto/output/calculate-simulation-output';
+import CalulateSimulationInput from '../dto/input/calculate-simulation-input';
+import { convertAndValidateInput } from '../dto/input/common-input';
+import CalulateSimulationOutput from '../dto/output/calculate-simulation-output';
 
 export default class CalculateSimulation {
   constructor(readonly solarEnergyGateway: SolarEnergyGateway) { }
 
   async execute(input: any): Promise<CalulateSimulationOutput> {
     const logger = Logger.get();
-    const validInput = convertAndValidatInput<CalulateSimulationInput>(input, new CalulateSimulationInput(input));
+    const validInput = convertAndValidateInput<CalulateSimulationInput>(input, new CalulateSimulationInput(input));
 
     let solarEnergyInstalation = SolarEnergyInstalation.buildBasicSolarEnergyInstalation();
     try {

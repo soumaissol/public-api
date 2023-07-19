@@ -1,6 +1,8 @@
 import * as jf from 'joiful';
 
-import InvalidInput from '../../../errors/invalid-input';
+import InvalidInput from '../../errors/invalid-input';
+
+import { safelyParseData } from './common-input';
 
 export default class CalulateSimulationInput {
   @jf.number().required().error(new InvalidInput('invalid powerDistributorId', 'invalid_power_distributor_id'))
@@ -19,7 +21,7 @@ export default class CalulateSimulationInput {
   public zip: string;
 
   constructor(input: any) {
-    const inputData = JSON.parse(input || '{}');
+    const inputData = safelyParseData(input);
 
     this.powerDistributorId = inputData.powerDistributorId;
     this.email = inputData.email;

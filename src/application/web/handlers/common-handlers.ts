@@ -8,6 +8,11 @@ const sendHttpOkResponse = (data: any): APIGatewayProxyResult => {
   return {
     statusCode: HttpStatus.OK,
     body: JSON.stringify(data),
+    headers: {
+      'Access-Control-Allow-Headers': 'Content-Type,Accept', // eslint-disable-line @typescript-eslint/naming-convention
+      'Access-Control-Allow-Origin': '*', // eslint-disable-line @typescript-eslint/naming-convention
+      'Access-Control-Allow-Methods': '*', // eslint-disable-line @typescript-eslint/naming-convention
+    },
   };
 };
 

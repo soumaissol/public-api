@@ -76,6 +76,7 @@ describe('Test CalculateSimulation usecase', () => {
       calculateInstallationSimulation: jest.fn().mockImplementationOnce(() => {
         throw new Error('unknow error');
       }),
+      getPowerDistributorListing: jest.fn(),
     };
     const calculateSimulation = new CalculateSimulation(solarEnergyGatewayMock);
     const result = await calculateSimulation.execute(JSON.stringify({

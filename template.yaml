@@ -11,14 +11,14 @@ Resources:
     Properties:
       StageName: Prod
       Cors:
-        AllowMethods: "'POST, GET'"
-        AllowHeaders: "'X-Forwarded-For'"
+        AllowMethods: "'*'"
+        AllowHeaders: "'Content-Type,Accept'"
         AllowOrigin: "'*'"
 
   GetPowerDistributors:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: dist/src/handlers/get-power-distributors.getPowerDistributorsHandler
+      Handler: dist/src/application/web/handlers/get-power-distributors.handler
       FunctionName: PublicApi-GetPowerDistributors
       Runtime: nodejs16.x
       Architectures:
@@ -39,7 +39,7 @@ Resources:
         Target: "es2020"
         Sourcemap: true
         EntryPoints:
-          - src/handlers/get-power-distributors.ts
+          - src/application/web/handlers/get-power-distributors.ts
 
   CalculateSimulation:
     Type: AWS::Serverless::Function
