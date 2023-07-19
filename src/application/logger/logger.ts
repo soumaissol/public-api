@@ -1,5 +1,7 @@
 import winston from 'winston';
 
+import { isProduction } from '../config/environment';
+
 let logger: winston.Logger;
 
 const Logger = {
@@ -11,7 +13,7 @@ const Logger = {
         format: winston.format.json(),
       });
 
-      if (process.env.NODE_ENV !== 'production') {
+      if (!isProduction()) {
         logger.add(new winston.transports.Console({
           format: winston.format.simple(),
         }));

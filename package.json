@@ -28,7 +28,7 @@
   },
   "scripts": {
     "build": "tsc && sam build",
-    "start": "sam local start-api -t template.yaml",
+    "start": "sam local start-api -t template.yaml -n env.json",
     "test": "tsc && jest .*\\\\.test\\\\.js$",
     "test-with-coverage": "tsc && jest .*\\\\.test\\\\.js$ --collectCoverage",
     "integration-test": "tsc && jest .*\\\\.integration-test\\\\.js$",

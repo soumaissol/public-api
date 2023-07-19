@@ -5,6 +5,13 @@ Description: >-
 Transform:
 - AWS::Serverless-2016-10-31
 
+Parameters:
+
+  Stage:
+    Type: String
+    Description: Runtime environment
+    Default: staging
+
 Resources:
   SimulationApi:
     Type: AWS::Serverless::Api
@@ -32,6 +39,9 @@ Resources:
             RestApiId: !Ref SimulationApi
             Path: /simulations/power-distributors/{zip}
             Method: GET
+      Environment:
+        Variables:
+          STAGE: !Ref Stage
     Metadata:
       BuildMethod: esbuild
       BuildProperties:
@@ -59,6 +69,9 @@ Resources:
             RestApiId: !Ref SimulationApi
             Path: /simulations/calculate
             Method: POST
+    Environment:
+      Variables:
+        STAGE: !Ref Stage
     Metadata:
       BuildMethod: esbuild
       BuildProperties:
