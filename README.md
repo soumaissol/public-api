@@ -3,7 +3,7 @@
 SouMaisSol public-api, current integrated in our landing page. This project uses:
 
 * AWS SAM CLI - [Install the AWS SAM CLI](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install.html).
-* Nvm - [Insall nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+* Nvm - [Install nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
 * Docker - [Install Docker community edition](https://hub.docker.com/search/?type=edition&offering=community).
 
 You must have aws access configured under the profile `soumaissol`.
@@ -20,8 +20,15 @@ npm run start
 
 For unit tests:
 ```bash
-npm run build
-npm test
+npm run test
+```
+
+For integration tests:
+
+_must run server in another bash_
+
+```bash
+npm run integration-test
 ```
 
 ## Call functions specifically
@@ -29,7 +36,7 @@ npm test
 To call any funciony individually use the scripts at package.json:
 
 ```bash
-npm run invoke:calculate
+npm run invoke:calculateSimulation
 npm run invoke:distributors
 ```
 
