@@ -26,8 +26,8 @@ describe('IntegrationTest CalculateSimulation', () => {
       zip: '12323123',
     });
     expect(output.status).toBe(HttpStatus.OK);
-    expect(output.data.monthlyLoanInstallmentAmount).toBe(530.58);
+    expect(output.data.monthlyLoanInstallmentAmount).toBe(193.33);
     expect(output.data.monthlyLoanInstallments).toBe(60);
-    expect(output.data.paybackInMonths).toBe(168);
+    expect(output.data.paybackInMonths).toBe(61);
   }, constants.DEFAULT_TIMEOUT);
 });

@@ -15,7 +15,7 @@ export default class CalculateSimulation {
     const logger = Logger.get();
     const validInput = convertAndValidateInput<CalulateSimulationInput>(input, new CalulateSimulationInput(input));
 
-    let solarEnergyInstalation = SolarEnergyInstalation.buildBasicSolarEnergyInstalation();
+    let solarEnergyInstalation = SolarEnergyInstalation.buildBasicSolarEnergyInstalation(validInput.energyConsumption);
     try {
       solarEnergyInstalation = await this.solarEnergyGateway.calculateInstallationSimulation(validInput.zip, validInput.energyConsumption,
         validInput.powerDistributorId);

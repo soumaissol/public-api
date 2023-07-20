@@ -83,7 +83,7 @@ describe('Test CalculateSimulation usecase', () => {
       powerDistributorId: 1,
       email: 'user@email.com', energyConsumption: 100, zip: '12323123',
     }));
-    expect(result).toEqual({ monthlyLoanInstallmentAmount: 855.72, monthlyLoanInstallments: 60, paybackInMonths: 270 });
+    expect(result).toEqual({ monthlyLoanInstallmentAmount: 193.33, monthlyLoanInstallments: 60, paybackInMonths: 61 });
   });
 
   it('should return the best option when all is valid', async () => {
