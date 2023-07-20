@@ -1,4 +1,5 @@
 import axios from 'axios';
+import HttpStatus from 'http-status-codes';
 
 import SolarEnergyInstalation from '../../domain/entity/solar-energy-instalation';
 import PowerDistributorListing from '../../domain/entity/power-distributors-listing';
@@ -42,6 +43,12 @@ export default class PortalSolarEnergyGateway implements SolarEnergyGateway {
         },
       },
     );
+    if (result.status !== HttpStatus.OK) {
+      throw new Error(`response with error ${result.status}: ${result.data.message}`);
+    }
+    if (result.data.light_bill === undefined || result.data.estimated_cost === undefined) {
+      throw new Error(`no data returned: ${result.data.message}`);
+    }
 
     return new SolarEnergyInstalation(parseFloat(result.data.light_bill),
       parseFloat(result.data.estimated_cost));
