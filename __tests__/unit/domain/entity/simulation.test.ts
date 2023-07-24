@@ -1,12 +1,10 @@
-import {LendingCompany} from '../../../../src/domain/entity/lending-company';
-import Client from '../../../../src/domain/entity/client';
-import {Simulation} from '../../../../src/domain/entity/simulation';
+import { LendingCompany } from '../../../../src/domain/entity/lending-company';
+import { Simulation } from '../../../../src/domain/entity/simulation';
 
 describe('Test Simulation', () => {
   it('should simulate for client and return the best option', () => {
-    const client = new Client(1000);
     const lendingCompany = new LendingCompany(0.0241);
-    const simulation = new Simulation(lendingCompany, client);
+    const simulation = new Simulation(lendingCompany, 1000);
 
     const result = simulation.simulateLoanForClient(18207.6);
 
@@ -19,9 +17,8 @@ describe('Test Simulation', () => {
   });
 
   it('should simulate for client and return the wrost option', () => {
-    const client = new Client(100);
     const lendingCompany = new LendingCompany(0.0241);
-    const simulation = new Simulation(lendingCompany, client);
+    const simulation = new Simulation(lendingCompany, 100);
 
     const result = simulation.simulateLoanForClient(18207.6);
 

@@ -1,4 +1,3 @@
-import Client from '../../domain/entity/client';
 import { LendingCompany } from '../../domain/entity/lending-company';
 import { Simulation } from '../../domain/entity/simulation';
 import SolarEnergyInstalation from '../../domain/entity/solar-energy-instalation';
@@ -23,9 +22,8 @@ export default class CalculateSimulation {
       logger.warn(`error on solarEnergyGateway: ${err.message}`);
     }
 
-    const client = new Client(validInput.energyConsumption);
     const lendingCompany = new LendingCompany(0.0241);
-    const simulation = new Simulation(lendingCompany, client);
+    const simulation = new Simulation(lendingCompany, validInput.energyConsumption);
 
     const bestSimulationOption = simulation.simulateLoanForClient(solarEnergyInstalation.estimatedCost);
 
