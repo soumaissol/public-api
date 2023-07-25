@@ -14,7 +14,8 @@ class LendingCompany {
     const simulationOptions: LoanOption[] = [];
     this.installmentOptions.forEach((installmentOption) => {
       const monthlyFeeExponent = (1 + this.lendingMonthlyFee) ** installmentOption;
-      const fixedMonthlyAmount = totalAmmount * this.lendingMonthlyFee * monthlyFeeExponent / (monthlyFeeExponent - 1);
+      const fixedMonthlyAmount =
+        (totalAmmount * this.lendingMonthlyFee * monthlyFeeExponent) / (monthlyFeeExponent - 1);
       simulationOptions.push({
         installments: installmentOption,
         fixedMonthlyAmount: Math.round(fixedMonthlyAmount * 100) / 100,
@@ -22,7 +23,6 @@ class LendingCompany {
     });
     return simulationOptions;
   }
-
 }
 
 export { LendingCompany, LoanOption };

@@ -1,14 +1,13 @@
-
 import * as jf from 'joiful';
 
-import InvalidInput from '../../errors/invalid-input';
 import EmptyInput from '../../errors/empty-input';
+import InvalidInput from '../../errors/invalid-input';
 
 function convertAndValidateInput<TData>(data: any, input: TData | null): TData {
   if (data === null || input === null) {
     throw new EmptyInput();
   }
-  const { error }: { error: any; } = jf.validate(input);
+  const { error }: { error: any } = jf.validate(input);
   if (error?.message) {
     if (error instanceof InvalidInput) {
       throw error;

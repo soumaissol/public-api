@@ -6,7 +6,7 @@ const PHONE_WITHOUT_COUNTRY_CODE_LENGTH = 11;
 const DEFAULT_COUNTRY_CODE = '55';
 
 const removeMask = (rawString: string): string => {
-  return rawString.replace(/[^0-9]/ig, '');
+  return rawString.replace(/[^0-9]/gi, '');
 };
 
 const isLengthValid = (sanitazedString: string): boolean => {
@@ -24,7 +24,6 @@ const validate = (rawString: string): boolean => {
 
   return true;
 };
-
 
 class Phone {
   constructor(private readonly phone: string) {
@@ -44,7 +43,9 @@ class Phone {
     const phone = sanitazedString.substring(4);
     const isPhoneOddLength = phone.length % 2 !== 0;
     const phoneIndexToFormat = isPhoneOddLength ? Math.ceil(phone.length / 2) : phone.length / 2;
-    return `+${countryCode} ${areaCode} ${phone.substring(0, phoneIndexToFormat)}-${phone.substring(phoneIndexToFormat)}`;
+    return `+${countryCode} ${areaCode} ${phone.substring(0, phoneIndexToFormat)}-${phone.substring(
+      phoneIndexToFormat,
+    )}`;
   }
 }
 

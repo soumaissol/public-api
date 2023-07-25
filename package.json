@@ -15,7 +15,7 @@
     "yup": "^1.2.0"
   },
   "devDependencies": {
-    "@shopify/eslint-plugin": "^42.1.0",
+    "@faker-js/faker": "^8.0.2",
     "@types/aws-lambda": "^8.10.119",
     "@types/axios": "^0.14.0",
     "@types/jest": "^27.0.2",
@@ -23,6 +23,8 @@
     "@typescript-eslint/eslint-plugin": "^6.1.0",
     "@typescript-eslint/parser": "^6.1.0",
     "esbuild-jest": "^0.5.0",
+    "eslint-plugin-prettier": "^5.0.0",
+    "eslint-plugin-simple-import-sort": "^10.0.0",
     "jest": "^26.6.3",
     "typescript": "^4.8.3"
   },
@@ -35,6 +37,7 @@
     "lint": "eslint . --ext .ts",
     "fix-lint": "eslint . --ext .ts --fix",
     "invoke:calculateSimulation": "sam local invoke -t template.yaml -e events/event-calculate.json -n env.json PublicApi-CalculateSimulation",
-    "invoke:distributors": "sam local invoke -t template.yaml -e events/event-get-power-distributors.json -n env.json PublicApi-GetPowerDistributors"
+    "invoke:distributors": "sam local invoke -t template.yaml -e events/event-get-power-distributors.json -n env.json PublicApi-GetPowerDistributors",
+    "invoke:createCustomerLead": "sam local invoke -t template.yaml -e events/event-create-customer-lead.json -n env.json PublicApi-CreateCustomerLead"
   }
 }

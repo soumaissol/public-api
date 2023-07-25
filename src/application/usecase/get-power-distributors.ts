@@ -1,11 +1,11 @@
 import SolarEnergyGateway from '../../infra/solar-energy-gateway/solar-energy-gateway';
-import Logger from '../logger/logger';
 import { convertAndValidateInput } from '../dto/input/common-input';
 import GetPowerDistributorsInput from '../dto/input/get-power-distributors-input';
 import { GetPowerDistributorsOutput, PowerDistributorOutput } from '../dto/output/get-power-distributors-output';
+import Logger from '../logger/logger';
 
 export default class GetPowerDistributors {
-  constructor(readonly solarEnergyGateway: SolarEnergyGateway) { }
+  constructor(readonly solarEnergyGateway: SolarEnergyGateway) {}
 
   async execute(input: any): Promise<GetPowerDistributorsOutput | null> {
     const logger = Logger.get();
@@ -18,7 +18,10 @@ export default class GetPowerDistributors {
         powerDistributorListing.location.city,
         powerDistributorListing.location.state,
         powerDistributorListing.location.sa,
-        powerDistributorListing.powerDistributors.map<PowerDistributorOutput>((powerDistributor) => new PowerDistributorOutput(powerDistributor.id, powerDistributor.name, powerDistributor.price)),
+        powerDistributorListing.powerDistributors.map<PowerDistributorOutput>(
+          (powerDistributor) =>
+            new PowerDistributorOutput(powerDistributor.id, powerDistributor.name, powerDistributor.price),
+        ),
       );
     } catch (err: any) {
       logger.warn(`error on solarEnergyGateway: ${err.message}`);

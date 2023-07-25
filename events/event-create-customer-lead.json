@@ -1,0 +1,4 @@
+{
+  "httpMethod": "POST",
+  "body": "{\"zip\": \"12345678\",\"email\": \"user@email.com\", \"phone\":\" 19 91234-1235\", \"energyConsumption\":500, \"fullName\":\"Full Name\", \"salesAgentLicenseId\":\"178123\"}"
+}

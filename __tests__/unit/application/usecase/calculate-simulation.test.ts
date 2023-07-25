@@ -1,8 +1,8 @@
-import CalculateSimulation from '../../../../src/application/usecase/calculate-simulation';
-import InvalidInput from '../../../../src/application/errors/invalid-input';
 import EmptyInput from '../../../../src/application/errors/empty-input';
+import InvalidInput from '../../../../src/application/errors/invalid-input';
+import CalculateSimulation from '../../../../src/application/usecase/calculate-simulation';
 import FakeSolarEnergyGateway from '../../../../src/infra/solar-energy-gateway/fake-solar-energy-gateway';
-import SolarEnergyGateway from '../../../../src/infra/solar-energy-gateway/solar-energy-gateway';
+import type SolarEnergyGateway from '../../../../src/infra/solar-energy-gateway/solar-energy-gateway';
 
 describe('Test CalculateSimulation usecase', () => {
   it('should return error when input is null', async () => {
@@ -49,10 +49,13 @@ describe('Test CalculateSimulation usecase', () => {
     try {
       const calculateSimulation = new CalculateSimulation(new FakeSolarEnergyGateway());
 
-      await calculateSimulation.execute(JSON.stringify({
-        powerDistributorId: 1, email: 'user@email.com',
-        energyConsumption: '-100',
-      }));
+      await calculateSimulation.execute(
+        JSON.stringify({
+          powerDistributorId: 1,
+          email: 'user@email.com',
+          energyConsumption: '-100',
+        }),
+      );
     } catch (err) {
       expect(err).toEqual(new InvalidInput('invalid energyConsumption', 'invalid_energy_consumption'));
     }
@@ -62,10 +65,14 @@ describe('Test CalculateSimulation usecase', () => {
     try {
       const calculateSimulation = new CalculateSimulation(new FakeSolarEnergyGateway());
 
-      await calculateSimulation.execute(JSON.stringify({
-        powerDistributorId: 1, email:
-          'user@email.com', energyConsumption: 100, zip: '123',
-      }));
+      await calculateSimulation.execute(
+        JSON.stringify({
+          powerDistributorId: 1,
+          email: 'user@email.com',
+          energyConsumption: 100,
+          zip: '123',
+        }),
+      );
     } catch (err) {
       expect(err).toEqual(new InvalidInput('invalid zip', 'invalid_zip'));
     }
@@ -79,19 +86,27 @@ describe('Test CalculateSimulation usecase', () => {
       getPowerDistributorListing: jest.fn(),
     };
     const calculateSimulation = new CalculateSimulation(solarEnergyGatewayMock);
-    const result = await calculateSimulation.execute(JSON.stringify({
-      powerDistributorId: 1,
-      email: 'user@email.com', energyConsumption: 100, zip: '12323123',
-    }));
+    const result = await calculateSimulation.execute(
+      JSON.stringify({
+        powerDistributorId: 1,
+        email: 'user@email.com',
+        energyConsumption: 100,
+        zip: '12323123',
+      }),
+    );
     expect(result).toEqual({ monthlyLoanInstallmentAmount: 193.33, monthlyLoanInstallments: 60, paybackInMonths: 61 });
   });
 
   it('should return the best option when all is valid', async () => {
     const calculateSimulation = new CalculateSimulation(new FakeSolarEnergyGateway());
-    const result = await calculateSimulation.execute(JSON.stringify({
-      powerDistributorId: 1,
-      email: 'user@email.com', energyConsumption: 100, zip: '12323123',
-    }));
+    const result = await calculateSimulation.execute(
+      JSON.stringify({
+        powerDistributorId: 1,
+        email: 'user@email.com',
+        energyConsumption: 100,
+        zip: '12323123',
+      }),
+    );
     expect(result).toEqual({ monthlyLoanInstallmentAmount: 530.58, monthlyLoanInstallments: 60, paybackInMonths: 168 });
   });
 });
