@@ -48,5 +48,4 @@ describe('Test Phone', () => {
     const phone = new Phone('2211123456789');
     expect(phone.getValue()).toBe('+22 11 12345-6789');
   });
-
 });

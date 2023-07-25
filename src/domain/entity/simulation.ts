@@ -7,8 +7,10 @@ interface SimulationResult {
 }
 
 class Simulation {
-  constructor(readonly lengingCompany: LendingCompany, readonly energyConsumption: number) {
-  }
+  constructor(
+    readonly lengingCompany: LendingCompany,
+    readonly energyConsumption: number,
+  ) {}
 
   simulateLoanForClient(totalAmmount): SimulationResult {
     const simulationOptions = this.lengingCompany.simulateFixedMonthlyLoanInstallmentOptions(totalAmmount);

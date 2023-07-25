@@ -8,7 +8,6 @@ describe('Test Simulation', () => {
 
     const result = simulation.simulateLoanForClient(18207.6);
 
-
     expect(result).toEqual({
       fixedMonthlyAmount: 762.21,
       installments: 36,
@@ -21,7 +20,6 @@ describe('Test Simulation', () => {
     const simulation = new Simulation(lendingCompany, 100);
 
     const result = simulation.simulateLoanForClient(18207.6);
-
 
     expect(result).toEqual({
       fixedMonthlyAmount: 577.06,

@@ -15,4 +15,4 @@ image_repositories = []
 resolve_s3 = true
 s3_prefix = "public-api"
 confirm_changeset = true
-parameter_overrides = "Stage=\"production\""
+parameter_overrides = "Stage=\"production\" PipefyAuthToken=\"< generate a token at https://app.pipefy.com/tokens >\" PipefyApiUrl=\"https://api.pipefy.com/graphql\" PipefyCustomersTableId=\"303176300\" PipefySalesAgentsTableId=\"303176301\" PipefyCustomerLeadsPipeId=\"303176290\""

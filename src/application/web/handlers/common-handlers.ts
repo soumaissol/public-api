@@ -1,15 +1,15 @@
+import type { APIGatewayProxyResult } from 'aws-lambda';
 import HttpStatus from 'http-status-codes';
-import { APIGatewayProxyResult } from 'aws-lambda';
 
-import Logger from '../../logger/logger';
+import GenericError from '../../../domain/errors/generic-error';
 import InvalidInput from '../../errors/invalid-input';
-
+import Logger from '../../logger/logger';
 
 const defaultHeaders = (): any => {
   return {
-    'Access-Control-Allow-Headers': 'Content-Type,Accept', // eslint-disable-line @typescript-eslint/naming-convention
-    'Access-Control-Allow-Origin': '*', // eslint-disable-line @typescript-eslint/naming-convention
-    'Access-Control-Allow-Methods': '*', // eslint-disable-line @typescript-eslint/naming-convention
+    'Access-Control-Allow-Headers': 'Content-Type,Accept',
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': '*',
   };
 };
 
@@ -29,6 +29,9 @@ const sendHtttpError = (err: any): APIGatewayProxyResult => {
   let body = JSON.stringify(err?.message || 'Unknow error');
 
   if (err instanceof InvalidInput) {
+    body = JSON.stringify(err);
+    statusCode = HttpStatus.BAD_REQUEST;
+  } else if (err instanceof GenericError) {
     body = JSON.stringify(err);
     statusCode = HttpStatus.BAD_REQUEST;
   }

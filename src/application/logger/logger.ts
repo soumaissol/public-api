@@ -14,9 +14,11 @@ const Logger = {
       });
 
       if (!isProduction()) {
-        logger.add(new winston.transports.Console({
-          format: winston.format.simple(),
-        }));
+        logger.add(
+          new winston.transports.Console({
+            format: winston.format.simple(),
+          }),
+        );
       }
     }
 

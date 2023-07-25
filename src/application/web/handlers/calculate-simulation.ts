@@ -1,11 +1,9 @@
-import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
+import type { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 
-import CalculateSimulation from '../../usecase/calculate-simulation';
 import { getStage } from '../../config/environment';
 import SolarEnergyGatewayFactory from '../../factory/solar-energy-gateway-factory';
-
+import CalculateSimulation from '../../usecase/calculate-simulation';
 import { sendHttpOkResponse, sendHtttpError } from './common-handlers';
-
 
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
   try {
