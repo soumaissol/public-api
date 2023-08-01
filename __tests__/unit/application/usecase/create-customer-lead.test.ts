@@ -15,7 +15,10 @@ const buildFakeCrmGateway = () => {
     findCustomerLeadByCustomer: jest.fn(),
     createCustomer: jest.fn(),
     findCustomerByPhone: jest.fn(),
-    findSalesAgentBytLicenseId: jest.fn(),
+    findSalesAgentByLicenseId: jest.fn(),
+    createSalesAgentLead: jest.fn(),
+    findSalesAgentLeadBySalesAgent: jest.fn(),
+    createSalesAgent: jest.fn(),
   };
 };
 
@@ -142,7 +145,7 @@ describe('Test CreateCustomerLead usecase', () => {
   it('should return error when sales agent is not found', async () => {
     const fakeCrmGateway = {
       ...buildFakeCrmGateway(),
-      findSalesAgentBytLicenseId: jest.fn().mockResolvedValueOnce(null),
+      findSalesAgentByLicenseId: jest.fn().mockResolvedValueOnce(null),
     };
     const createCustomerLead = new CreateCustomerLead(fakeCrmGateway);
     const salesAgentLicenseId = '178123';
@@ -161,8 +164,8 @@ describe('Test CreateCustomerLead usecase', () => {
     } catch (err) {
       expect(err).toEqual(new SalesAgentNotFound(salesAgentLicenseId));
 
-      expect(fakeCrmGateway.findSalesAgentBytLicenseId).toHaveBeenCalledTimes(1);
-      expect(fakeCrmGateway.findSalesAgentBytLicenseId.mock.calls[0][0]).toBe(salesAgentLicenseId);
+      expect(fakeCrmGateway.findSalesAgentByLicenseId).toHaveBeenCalledTimes(1);
+      expect(fakeCrmGateway.findSalesAgentByLicenseId.mock.calls[0][0]).toBe(salesAgentLicenseId);
     }
   });
 
@@ -183,11 +186,18 @@ describe('Test CreateCustomerLead usecase', () => {
       input.energyConsumption,
       'sa-id-1',
     );
-    const salesAgent = new SalesAgent('sa-id-1', input.salesAgentLicenseId);
+    const salesAgent = new SalesAgent(
+      input.salesAgentLicenseId,
+      '11912341234',
+      'sales@agent.com',
+      'Sales Agent',
+      ['1', '2'],
+      'sa-id-1',
+    );
 
     const fakeCrmGateway = {
       ...buildFakeCrmGateway(),
-      findSalesAgentBytLicenseId: jest.fn().mockResolvedValueOnce(salesAgent),
+      findSalesAgentByLicenseId: jest.fn().mockResolvedValueOnce(salesAgent),
       findCustomerByPhone: jest.fn().mockResolvedValueOnce(customer),
       findCustomerLeadByCustomer: jest.fn().mockResolvedValueOnce(new CustomerLead('cl-id-1', customer, salesAgent)),
     };
@@ -195,10 +205,10 @@ describe('Test CreateCustomerLead usecase', () => {
     try {
       await createCustomerLead.execute(JSON.stringify(input));
     } catch (err) {
-      expect(err).toEqual(new CustomerLeadAlreadExists(customer.id));
+      expect(err).toEqual(new CustomerLeadAlreadExists(customer.id!));
 
-      expect(fakeCrmGateway.findSalesAgentBytLicenseId).toHaveBeenCalledTimes(1);
-      expect(fakeCrmGateway.findSalesAgentBytLicenseId.mock.calls[0][0]).toBe(input.salesAgentLicenseId);
+      expect(fakeCrmGateway.findSalesAgentByLicenseId).toHaveBeenCalledTimes(1);
+      expect(fakeCrmGateway.findSalesAgentByLicenseId.mock.calls[0][0]).toBe(input.salesAgentLicenseId);
 
       expect(fakeCrmGateway.findCustomerByPhone).toHaveBeenCalledTimes(1);
       expect(fakeCrmGateway.findCustomerByPhone.mock.calls[0][0]).toBe(customer.getPhone());
@@ -226,12 +236,19 @@ describe('Test CreateCustomerLead usecase', () => {
       input.energyConsumption,
       'sa-id-1',
     );
-    const salesAgent = new SalesAgent('sa-id-1', input.salesAgentLicenseId);
+    const salesAgent = new SalesAgent(
+      input.salesAgentLicenseId,
+      '11912341234',
+      'sales@agent.com',
+      'Sales Agent',
+      ['1', '2'],
+      'sa-id-1',
+    );
     const customerLead = new CustomerLead('cl-id-1', customer, salesAgent);
 
     const fakeCrmGateway = {
       ...buildFakeCrmGateway(),
-      findSalesAgentBytLicenseId: jest.fn().mockResolvedValueOnce(salesAgent),
+      findSalesAgentByLicenseId: jest.fn().mockResolvedValueOnce(salesAgent),
       findCustomerByPhone: jest.fn().mockResolvedValueOnce(null),
       createCustomer: jest.fn().mockResolvedValueOnce(customer),
       createCustomerLead: jest.fn().mockResolvedValueOnce(customerLead),
@@ -241,8 +258,8 @@ describe('Test CreateCustomerLead usecase', () => {
     const result = await createCustomerLead.execute(JSON.stringify(input));
     expect(result).toEqual(new CreateCustomerLeadOutput(customerLead.id));
 
-    expect(fakeCrmGateway.findSalesAgentBytLicenseId).toHaveBeenCalledTimes(1);
-    expect(fakeCrmGateway.findSalesAgentBytLicenseId.mock.calls[0][0]).toBe(input.salesAgentLicenseId);
+    expect(fakeCrmGateway.findSalesAgentByLicenseId).toHaveBeenCalledTimes(1);
+    expect(fakeCrmGateway.findSalesAgentByLicenseId.mock.calls[0][0]).toBe(input.salesAgentLicenseId);
 
     expect(fakeCrmGateway.findCustomerByPhone).toHaveBeenCalledTimes(1);
     expect(fakeCrmGateway.findCustomerByPhone.mock.calls[0][0]).toBe(customer.getPhone());

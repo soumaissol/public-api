@@ -25,6 +25,9 @@ Parameters:
   PipefyCustomerLeadsPipeId:
     Type: String
     Description: Pipefy customer leads pipe id
+  PipefySalesAgentLeadsPipeId:
+    Type: String
+    Description: Pipefy sales agent leads pipe id
 
 Resources:
   SimulationApi:
@@ -120,6 +123,7 @@ Resources:
           PIPEFY_CUSTOMERS_TABLE_ID: !Ref PipefyCustomersTableId
           PIPEFY_SALES_AGENTS_TABLE_ID: !Ref PipefySalesAgentsTableId
           PIPEFY_CUSTOMER_LEADS_PIPE_ID: !Ref PipefyCustomerLeadsPipeId
+          PIPEFY_SALES_AGENT_LEADS_PIPE_ID: !Ref PipefySalesAgentLeadsPipeId
     Metadata:
       BuildMethod: esbuild
       BuildProperties:
@@ -127,6 +131,41 @@ Resources:
         Sourcemap: true
         EntryPoints:
           - src/application/web/handlers/create-customer-lead.ts
+
+  CreateSalesAgentLead:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: dist/src/application/web/handlers/create-sales-agent-lead.handler
+      FunctionName: PublicApi-CreateSalesAgentLead
+      Runtime: nodejs16.x
+      Architectures:
+        - x86_64
+      MemorySize: 128
+      Timeout: 100
+      Policies:
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            RestApiId: !Ref SimulationApi
+            Path: /salesAgentLead
+            Method: POST
+      Environment:
+        Variables:
+          STAGE: !Ref Stage
+          PIPEFY_AUTH_TOKEN: !Ref PipefyAuthToken
+          PIPEFY_API_URL: !Ref PipefyApiUrl
+          PIPEFY_CUSTOMERS_TABLE_ID: !Ref PipefyCustomersTableId
+          PIPEFY_SALES_AGENTS_TABLE_ID: !Ref PipefySalesAgentsTableId
+          PIPEFY_CUSTOMER_LEADS_PIPE_ID: !Ref PipefyCustomerLeadsPipeId
+          PIPEFY_SALES_AGENT_LEADS_PIPE_ID: !Ref PipefySalesAgentLeadsPipeId
+    Metadata:
+      BuildMethod: esbuild
+      BuildProperties:
+        Target: 'es2020'
+        Sourcemap: true
+        EntryPoints:
+          - src/application/web/handlers/create-sales-agent-lead.ts
 
 Outputs:
   WebEndpoint:

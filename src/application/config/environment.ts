@@ -31,11 +31,16 @@ const getPipefyCustomerLeadsPipeId = (): Stage => {
   return process.env.PIPEFY_CUSTOMER_LEADS_PIPE_ID as Stage;
 };
 
+const getPipefySalesAgentLeadsPipeId = (): Stage => {
+  return process.env.PIPEFY_SALES_AGENT_LEADS_PIPE_ID as Stage;
+};
+
 export {
   getPipefyApiUrl,
   getPipefyAuthToken,
   getPipefyCustomerLeadsPipeId,
   getPipefyCustomerTableId,
+  getPipefySalesAgentLeadsPipeId,
   getPipefySalesAgentsTableId,
   getStage,
   isProduction,

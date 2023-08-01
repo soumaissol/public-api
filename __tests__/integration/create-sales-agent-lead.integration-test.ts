@@ -4,13 +4,13 @@ import HttpStatus from 'http-status-codes';
 
 import constants from './constants';
 
-describe('IntegrationTest CreateCustomerLead', () => {
-  const existentSalesAgentLicenseId = '178123';
+describe('IntegrationTest CreateSalesAgentLead', () => {
+  const existentAgencyIds = ['751149013', '752029611'];
   it(
     'should return error when input is invalid',
     async () => {
       try {
-        await axios.post(`${constants.API_URL}/customerLead`, {
+        await axios.post(`${constants.API_URL}/salesAgentLead`, {
           phone: '111234',
           email: 'email.com',
         });
@@ -26,67 +26,50 @@ describe('IntegrationTest CreateCustomerLead', () => {
   );
 
   it(
-    'should return error when sales agent is not found',
+    'should return new sales agent lead when all input is valid',
     async () => {
-      const salesAgentLicenseId = '1';
       try {
-        await axios.post(`${constants.API_URL}/customerLead`, {
+        const output = await axios.post(`${constants.API_URL}/salesAgentLead`, {
           phone: faker.phone.number('+## ## #####-####'),
           email: faker.internet.email(),
           fullName: faker.person.fullName(),
-          zip: faker.location.zipCode('########'),
-          energyConsumption: faker.number.int(10000),
-          salesAgentLicenseId,
+          licenseId: faker.number.int(1000000).toString(),
+          agencyIds: existentAgencyIds,
         });
+        expect(output.status).toBe(HttpStatus.OK);
+        expect(output.data.leadId).not.toBeUndefined();
       } catch (err) {
         expect(err).toHaveProperty('response');
         const response = (err as any).response;
         expect(response.status).toBe(HttpStatus.BAD_REQUEST);
         expect(response.data.code).toBe('sales_agent_not_found');
-        expect(response.data.message).toBe(`sales agent not found for id ${salesAgentLicenseId}`);
+        expect(response.data.message).toBe(`sales agent not found for id`);
       }
     },
     constants.DEFAULT_TIMEOUT,
   );
 
   it(
-    'should return new customer lead when all input is valid',
-    async () => {
-      const output = await axios.post(`${constants.API_URL}/customerLead`, {
-        phone: faker.phone.number('+## ## #####-####'),
-        email: faker.internet.email(),
-        fullName: faker.person.fullName(),
-        zip: faker.location.zipCode('########'),
-        energyConsumption: faker.number.int(10000),
-        salesAgentLicenseId: existentSalesAgentLicenseId,
-      });
-      expect(output.status).toBe(HttpStatus.OK);
-      expect(output.data.leadId).not.toBeUndefined();
-    },
-    constants.DEFAULT_TIMEOUT,
-  );
-
-  it(
-    'should return old customer lead when same request is called again',
+    'should return old sales agent lead when same request is called again',
     async () => {
       const input = {
         phone: faker.phone.number('+## ## #####-####'),
         email: faker.internet.email(),
         fullName: faker.person.fullName(),
-        zip: faker.location.zipCode('########'),
-        energyConsumption: faker.number.int(10000),
-        salesAgentLicenseId: existentSalesAgentLicenseId,
+        licenseId: faker.number.int(1000000).toString(),
+        agencyIds: existentAgencyIds,
       };
-      const output = await axios.post(`${constants.API_URL}/customerLead`, input);
+      const output = await axios.post(`${constants.API_URL}/salesAgentLead`, input);
       expect(output.status).toBe(HttpStatus.OK);
       expect(output.data.leadId).not.toBeUndefined();
       try {
-        await axios.post(`${constants.API_URL}/customerLead`, input);
+        await axios.post(`${constants.API_URL}/salesAgentLead`, input);
       } catch (err) {
         expect(err).toHaveProperty('response');
         const response = (err as any).response;
         expect(response.status).toBe(HttpStatus.BAD_REQUEST);
-        expect(response.data.code).toBe('customer_lead_alread_exists');
+        expect(response.data.code).toBe('sales_agent_lead_alread_exists');
+        expect(response.data.message).toBe(`sales agent lead alread exists for customer ${input.licenseId}`);
       }
     },
     constants.DEFAULT_TIMEOUT * 2,

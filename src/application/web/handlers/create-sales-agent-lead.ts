@@ -9,7 +9,7 @@ import {
   getPipefySalesAgentLeadsPipeId,
   getPipefySalesAgentsTableId,
 } from '../../config/environment';
-import CreateCustomerLead from '../../usecase/create-customer-lead';
+import CreateSalesAgentLead from '../../usecase/create-sales-agent-lead';
 import { sendHttpOkResponse, sendHtttpError } from './common-handlers';
 
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
@@ -23,7 +23,7 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
       getPipefySalesAgentLeadsPipeId(),
     );
 
-    return sendHttpOkResponse(await new CreateCustomerLead(crmGateway).execute(event.body));
+    return sendHttpOkResponse(await new CreateSalesAgentLead(crmGateway).execute(event.body));
   } catch (err: any) {
     return sendHtttpError(err);
   }

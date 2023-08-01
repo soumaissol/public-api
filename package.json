@@ -38,6 +38,7 @@
     "fix-lint": "eslint . --ext .ts --fix",
     "invoke:calculateSimulation": "sam local invoke -t template.yaml -e events/event-calculate.json -n env.json PublicApi-CalculateSimulation",
     "invoke:distributors": "sam local invoke -t template.yaml -e events/event-get-power-distributors.json -n env.json PublicApi-GetPowerDistributors",
-    "invoke:createCustomerLead": "sam local invoke -t template.yaml -e events/event-create-customer-lead.json -n env.json PublicApi-CreateCustomerLead"
+    "invoke:createCustomerLead": "sam local invoke -t template.yaml -e events/event-create-customer-lead.json -n env.json PublicApi-CreateCustomerLead",
+    "invoke:createSalesAgentLead": "sam local invoke -t template.yaml -e events/event-create-sales-agent-lead.json -n env.json PublicApi-CreateSalesAgentLead"
   }
 }

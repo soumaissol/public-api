@@ -1,10 +1,32 @@
+import Phone from './phone';
+
 class SalesAgent {
+  private readonly phone: Phone;
+
   constructor(
-    readonly id: string,
     readonly licenseId: string,
+    phone: string,
+    readonly email: string,
+    readonly fullName: string,
+    readonly agencyIds: string[],
+    readonly id: string | null = null,
   ) {
-    this.id = id;
-    this.licenseId = licenseId;
+    this.phone = new Phone(phone);
+  }
+
+  public static buildSalesAgent(salesAgent: SalesAgent, id: string) {
+    return new SalesAgent(
+      salesAgent.licenseId,
+      salesAgent.getPhone(),
+      salesAgent.email,
+      salesAgent.fullName,
+      salesAgent.agencyIds,
+      id,
+    );
+  }
+
+  public getPhone(): string {
+    return this.phone.getValue();
   }
 }
 

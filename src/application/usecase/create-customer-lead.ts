@@ -22,7 +22,7 @@ export default class CreateCustomerLead {
       validInput.energyConsumption,
     );
 
-    const salesAgent = await this.crmGateway.findSalesAgentBytLicenseId(validInput.salesAgentLicenseId);
+    const salesAgent = await this.crmGateway.findSalesAgentByLicenseId(validInput.salesAgentLicenseId);
     if (salesAgent === null) {
       throw new SalesAgentNotFound(validInput.salesAgentLicenseId);
     }
@@ -36,7 +36,7 @@ export default class CreateCustomerLead {
     let customerLead = await this.crmGateway.findCustomerLeadByCustomer(customer, salesAgent);
     if (customerLead != null) {
       logger.warn(`lead for customer ${customer.id}, already exists: ${customerLead.id}`);
-      throw new CustomerLeadAlreadExists(customer.id);
+      throw new CustomerLeadAlreadExists(customer.id!);
     }
 
     customerLead = await this.crmGateway.createCustomerLead(customer, salesAgent);

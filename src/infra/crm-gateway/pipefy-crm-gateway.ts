@@ -5,11 +5,13 @@ import HttpStatus from 'http-status-codes';
 import Customer from '../../domain/entity/customer';
 import CustomerLead from '../../domain/entity/customer-lead';
 import SalesAgent from '../../domain/entity/sales-agent';
+import SalesAgentLead from '../../domain/entity/sales-agent-lead';
 import type CrmGateway from './crm-gateway';
 import type PipefyCard from './pipefy-crm-model/pipefy-card';
 import {
   customerLeadCardDefinitions,
   customerTableDefinitions,
+  salesAgentLeadCardDefinitions,
   salesAgentTableDefinitions,
 } from './pipefy-crm-model/pipefy-definitions';
 import type PipefyEdge from './pipefy-crm-model/pipefy-edge';
@@ -24,12 +26,40 @@ export default class PipefyCrmGateway implements CrmGateway {
     readonly customerTableDefinitionsId: string,
     readonly salesAgentsTableId: string,
     readonly customerLeadsPipeId: string,
+    readonly salesAgentLeadsPipeId: string,
   ) {}
+  async createSalesAgentLead(salesAgent: SalesAgent): Promise<SalesAgentLead> {
+    const cardRecord = await this.createCard(this.salesAgentLeadsPipeId, [
+      new PipefyFieldAttribute(salesAgentLeadCardDefinitions.salesAgentFieldId, salesAgent.id!),
+    ]);
+
+    return new SalesAgentLead(cardRecord.id, salesAgent);
+  }
+
+  async findSalesAgentLeadBySalesAgent(salesAgent: SalesAgent): Promise<SalesAgentLead | null> {
+    const pipefySalesAgentLead = await this.findCard(
+      this.salesAgentLeadsPipeId,
+      new PipefySearchInput(salesAgentLeadCardDefinitions.salesAgentFieldId, salesAgent.id!),
+    );
+    return pipefySalesAgentLead ? new SalesAgentLead(pipefySalesAgentLead.node.id, salesAgent) : null;
+  }
+
+  async createSalesAgent(salesAgent: SalesAgent): Promise<SalesAgent> {
+    const tableRecord = await this.createRecord(this.salesAgentsTableId, [
+      new PipefyFieldAttribute(salesAgentTableDefinitions.emailFieldId, salesAgent.email),
+      new PipefyFieldAttribute(salesAgentTableDefinitions.phoneFieldId, salesAgent.getPhone()),
+      new PipefyFieldAttribute(salesAgentTableDefinitions.fullNameFieldId, salesAgent.fullName),
+      new PipefyFieldAttribute(salesAgentTableDefinitions.licenseFieldId, salesAgent.licenseId),
+      new PipefyFieldAttribute(salesAgentTableDefinitions.agencyIdsFieldId, salesAgent.agencyIds.toString()),
+    ]);
+
+    return SalesAgent.buildSalesAgent(salesAgent, tableRecord.id);
+  }
 
   async createCustomerLead(customer: Customer, salesAgent: SalesAgent): Promise<CustomerLead> {
     const cardRecord = await this.createCard(this.customerLeadsPipeId, [
       new PipefyFieldAttribute(customerLeadCardDefinitions.customerFieldId, customer.id!),
-      new PipefyFieldAttribute(customerLeadCardDefinitions.salesAgentFieldId, salesAgent.id),
+      new PipefyFieldAttribute(customerLeadCardDefinitions.salesAgentFieldId, salesAgent.id!),
     ]);
 
     return new CustomerLead(cardRecord.id, customer, salesAgent);
@@ -50,7 +80,7 @@ export default class PipefyCrmGateway implements CrmGateway {
       new PipefyFieldAttribute(customerTableDefinitions.fullNameFieldId, customer.fullName),
       new PipefyFieldAttribute(customerTableDefinitions.zipFieldId, customer.zip),
       new PipefyFieldAttribute(customerTableDefinitions.energyConsumption, customer.energyConsumption.toString()),
-      new PipefyFieldAttribute(customerTableDefinitions.salesAgentFieldId, salesAgent.id),
+      new PipefyFieldAttribute(customerTableDefinitions.salesAgentFieldId, salesAgent.id!),
     ]);
 
     return Customer.buildCustomer(customer, tableRecord.id);
@@ -90,12 +120,30 @@ export default class PipefyCrmGateway implements CrmGateway {
     return '';
   }
 
-  async findSalesAgentBytLicenseId(salesAgentLicenseId: string): Promise<SalesAgent | null> {
+  getFieldArrayValue(edge: PipefyEdge, id: string): string[] {
+    for (const nodeField of edge.node.fields) {
+      if (id === nodeField.field.id) {
+        return nodeField.array_value;
+      }
+    }
+    return [];
+  }
+
+  async findSalesAgentByLicenseId(salesAgentLicenseId: string): Promise<SalesAgent | null> {
     const pipefySalesAgent = await this.findRecord(
       this.salesAgentsTableId,
-      new PipefySearchInput(salesAgentTableDefinitions.licenseId, salesAgentLicenseId),
+      new PipefySearchInput(salesAgentTableDefinitions.licenseFieldId, salesAgentLicenseId),
     );
-    return pipefySalesAgent ? new SalesAgent(pipefySalesAgent.node.id, salesAgentLicenseId) : null;
+    return pipefySalesAgent
+      ? new SalesAgent(
+          this.getFieldValue(pipefySalesAgent, salesAgentTableDefinitions.licenseFieldId),
+          this.getFieldValue(pipefySalesAgent, salesAgentTableDefinitions.phoneFieldId),
+          this.getFieldValue(pipefySalesAgent, salesAgentTableDefinitions.emailFieldId),
+          this.getFieldValue(pipefySalesAgent, salesAgentTableDefinitions.fullNameFieldId),
+          this.getFieldArrayValue(pipefySalesAgent, salesAgentTableDefinitions.agencyIdsFieldId),
+          pipefySalesAgent.node.id,
+        )
+      : null;
   }
 
   async createRecord(tableId: string, fieldAttributes: PipefyFieldAttribute[]): Promise<PipefyTableRecord> {
@@ -138,6 +186,7 @@ export default class PipefyCrmGateway implements CrmGateway {
               id
               fields {
                 value
+                array_value
                 field {
                   id
                 }

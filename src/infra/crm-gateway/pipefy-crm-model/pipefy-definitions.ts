@@ -8,7 +8,11 @@ const customerTableDefinitions = {
 };
 
 const salesAgentTableDefinitions = {
-  licenseId: 'creci',
+  licenseFieldId: 'creci',
+  phoneFieldId: 'telefone',
+  fullNameFieldId: 'nome',
+  agencyIdsFieldId: 'ag_ncia',
+  emailFieldId: 'email',
 };
 
 const customerLeadCardDefinitions = {
@@ -16,4 +20,13 @@ const customerLeadCardDefinitions = {
   salesAgentFieldId: 'corretor',
 };
 
-export { customerLeadCardDefinitions, customerTableDefinitions, salesAgentTableDefinitions };
+const salesAgentLeadCardDefinitions = {
+  salesAgentFieldId: 'corretor',
+};
+
+export {
+  customerLeadCardDefinitions,
+  customerTableDefinitions,
+  salesAgentLeadCardDefinitions,
+  salesAgentTableDefinitions,
+};
