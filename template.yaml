@@ -44,10 +44,10 @@ Resources:
     Properties:
       Handler: dist/src/application/web/handlers/get-power-distributors.handler
       FunctionName: PublicApi-GetPowerDistributors
-      Runtime: nodejs16.x
+      Runtime: nodejs18.x
       Architectures:
         - x86_64
-      MemorySize: 128
+      MemorySize: 512
       Timeout: 100
       Events:
         Api:
@@ -73,10 +73,10 @@ Resources:
     Properties:
       Handler: dist/src/application/web/handlers/calculate-simulation.handler
       FunctionName: PublicApi-CalculateSimulation
-      Runtime: nodejs16.x
+      Runtime: nodejs18.x
       Architectures:
         - x86_64
-      MemorySize: 128
+      MemorySize: 512
       Timeout: 100
       Policies:
       Events:
@@ -102,14 +102,14 @@ Resources:
     Properties:
       Handler: dist/src/application/web/handlers/create-customer-lead.handler
       FunctionName: PublicApi-CreateCustomerLead
-      Runtime: nodejs16.x
+      Runtime: nodejs18.x
       Architectures:
         - x86_64
-      MemorySize: 128
+      MemorySize: 512
       Timeout: 100
       Policies:
       Events:
-        Api:  
+        Api:
           Type: Api
           Properties:
             RestApiId: !Ref SimulationApi
@@ -137,10 +137,10 @@ Resources:
     Properties:
       Handler: dist/src/application/web/handlers/create-sales-agent-lead.handler
       FunctionName: PublicApi-CreateSalesAgentLead
-      Runtime: nodejs16.x
+      Runtime: nodejs18.x
       Architectures:
         - x86_64
-      MemorySize: 128
+      MemorySize: 512
       Timeout: 100
       Policies:
       Events:
