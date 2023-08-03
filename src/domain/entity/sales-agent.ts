@@ -8,7 +8,7 @@ class SalesAgent {
     phone: string,
     readonly email: string,
     readonly fullName: string,
-    readonly agencyIds: string[],
+    readonly agency: string | null,
     readonly id: string | null = null,
   ) {
     this.phone = new Phone(phone);
@@ -20,7 +20,7 @@ class SalesAgent {
       salesAgent.getPhone(),
       salesAgent.email,
       salesAgent.fullName,
-      salesAgent.agencyIds,
+      salesAgent.agency,
       id,
     );
   }

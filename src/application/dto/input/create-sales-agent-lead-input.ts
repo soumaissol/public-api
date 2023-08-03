@@ -16,12 +16,8 @@ export default class CreateSalesAgentLeadInput {
   @jf.string().allow('', null).error(new InvalidInput('invalid license id', 'invalid_license_id'))
   public licenseId: string | null;
 
-  @jf
-    .array()
-    .required()
-    .items((joi) => joi.string().error(new InvalidInput('invalid agency id', 'invalid_agency_id')))
-    .error(new InvalidInput('invalid agency ids', 'invalid_agency_ids'))
-  public agencyIds: string[];
+  @jf.string().allow('', null).error(new InvalidInput('invalid agency', 'invalid_agency'))
+  public agency: string | null;
 
   constructor(input: any) {
     const inputData = safelyParseData(input);
@@ -30,6 +26,6 @@ export default class CreateSalesAgentLeadInput {
     this.email = inputData.email;
     this.fullName = inputData.fullName;
     this.licenseId = inputData.licenseId || null;
-    this.agencyIds = inputData.agencyIds;
+    this.agency = inputData.agency || null;
   }
 }

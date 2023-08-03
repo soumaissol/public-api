@@ -11,7 +11,7 @@ const salesAgentTableDefinitions = {
   licenseFieldId: 'creci',
   phoneFieldId: 'telefone',
   fullNameFieldId: 'nome',
-  agencyIdsFieldId: 'ag_ncia',
+  agencyFieldId: 'ag_ncia',
   emailFieldId: 'email',
 };
 

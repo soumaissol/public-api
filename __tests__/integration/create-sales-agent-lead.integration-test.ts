@@ -5,7 +5,6 @@ import HttpStatus from 'http-status-codes';
 import constants from './constants';
 
 describe('IntegrationTest CreateSalesAgentLead', () => {
-  const existentAgencyIds = ['751149013', '752029611'];
   it(
     'should return error when input is invalid',
     async () => {
@@ -33,7 +32,7 @@ describe('IntegrationTest CreateSalesAgentLead', () => {
         email: faker.internet.email(),
         fullName: faker.person.fullName(),
         licenseId: faker.number.int(1000000).toString(),
-        agencyIds: existentAgencyIds,
+        agency: faker.company.name(),
       });
       expect(output.status).toBe(HttpStatus.OK);
       expect(output.data.leadId).not.toBeUndefined();
@@ -48,7 +47,21 @@ describe('IntegrationTest CreateSalesAgentLead', () => {
         phone: faker.phone.number('+## ## #####-####'),
         email: faker.internet.email(),
         fullName: faker.person.fullName(),
-        agencyIds: existentAgencyIds,
+        agency: faker.company.name(),
+      });
+      expect(output.status).toBe(HttpStatus.OK);
+      expect(output.data.leadId).not.toBeUndefined();
+    },
+    constants.DEFAULT_TIMEOUT,
+  );
+
+  it(
+    'should return new sales agent lead when all input is valid without licenseId and agency',
+    async () => {
+      const output = await axios.post(`${constants.API_URL}/salesAgentLead`, {
+        phone: faker.phone.number('+## ## #####-####'),
+        email: faker.internet.email(),
+        fullName: faker.person.fullName(),
       });
       expect(output.status).toBe(HttpStatus.OK);
       expect(output.data.leadId).not.toBeUndefined();
@@ -64,7 +77,7 @@ describe('IntegrationTest CreateSalesAgentLead', () => {
         email: faker.internet.email(),
         fullName: faker.person.fullName(),
         licenseId: faker.number.int(1000000).toString(),
-        agencyIds: existentAgencyIds,
+        agency: faker.company.name(),
       };
       const output = await axios.post(`${constants.API_URL}/salesAgentLead`, input);
       expect(output.status).toBe(HttpStatus.OK);
@@ -89,7 +102,7 @@ describe('IntegrationTest CreateSalesAgentLead', () => {
         phone: faker.phone.number('+## ## #####-####'),
         email: faker.internet.email(),
         fullName: faker.person.fullName(),
-        agencyIds: existentAgencyIds,
+        agency: faker.company.name(),
       };
       const output = await axios.post(`${constants.API_URL}/salesAgentLead`, input);
       expect(output.status).toBe(HttpStatus.OK);

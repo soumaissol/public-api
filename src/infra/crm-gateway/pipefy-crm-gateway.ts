@@ -51,7 +51,7 @@ export default class PipefyCrmGateway implements CrmGateway {
       new PipefyFieldAttribute(salesAgentTableDefinitions.phoneFieldId, salesAgent.getPhone()),
       new PipefyFieldAttribute(salesAgentTableDefinitions.fullNameFieldId, salesAgent.fullName),
       new PipefyFieldAttribute(salesAgentTableDefinitions.licenseFieldId, salesAgent.licenseId || ''),
-      new PipefyFieldAttribute(salesAgentTableDefinitions.agencyIdsFieldId, salesAgent.agencyIds.toString()),
+      new PipefyFieldAttribute(salesAgentTableDefinitions.agencyFieldId, salesAgent.agency || ''),
     ]);
 
     return SalesAgent.buildSalesAgent(salesAgent, tableRecord.id);
@@ -121,6 +121,15 @@ export default class PipefyCrmGateway implements CrmGateway {
     return '';
   }
 
+  getFieldValueOrNull(edge: PipefyEdge, id: string): string | null {
+    for (const nodeField of edge.node.fields) {
+      if (id === nodeField.field.id) {
+        return nodeField.value || null;
+      }
+    }
+    return null;
+  }
+
   getFieldArrayValue(edge: PipefyEdge, id: string): string[] {
     for (const nodeField of edge.node.fields) {
       if (id === nodeField.field.id) {
@@ -149,11 +158,11 @@ export default class PipefyCrmGateway implements CrmGateway {
   private buildSalesAgent(pipefySalesAgent: PipefyEdge | undefined): SalesAgent | null {
     return pipefySalesAgent
       ? new SalesAgent(
-          this.getFieldValue(pipefySalesAgent, salesAgentTableDefinitions.licenseFieldId),
+          this.getFieldValueOrNull(pipefySalesAgent, salesAgentTableDefinitions.licenseFieldId),
           this.getFieldValue(pipefySalesAgent, salesAgentTableDefinitions.phoneFieldId),
           this.getFieldValue(pipefySalesAgent, salesAgentTableDefinitions.emailFieldId),
           this.getFieldValue(pipefySalesAgent, salesAgentTableDefinitions.fullNameFieldId),
-          this.getFieldArrayValue(pipefySalesAgent, salesAgentTableDefinitions.agencyIdsFieldId),
+          this.getFieldValueOrNull(pipefySalesAgent, salesAgentTableDefinitions.agencyFieldId),
           pipefySalesAgent.node.id,
         )
       : null;

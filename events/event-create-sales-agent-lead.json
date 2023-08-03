@@ -1,4 +1,4 @@
 {
   "httpMethod": "POST",
-  "body": "{\"licenseId\": \"178128\",\"email\": \"user@email.com\", \"phone\":\" 19 91234-1235\", \"fullName\":\"Full Name\", \"agencyIds\":[\"751149013\", \"752029611\"]}"
+  "body": "{\"licenseId\": \"178128\",\"email\": \"user@email.com\", \"phone\":\" 19 91234-1235\", \"fullName\":\"Full Name\", \"agency\":\"Imob\"}"
 }

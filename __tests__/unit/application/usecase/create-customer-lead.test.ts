@@ -192,7 +192,7 @@ describe('Test CreateCustomerLead usecase', () => {
       '11912341234',
       'sales@agent.com',
       'Sales Agent',
-      ['1', '2'],
+      'Imob',
       'sa-id-1',
     );
 
@@ -242,7 +242,7 @@ describe('Test CreateCustomerLead usecase', () => {
       '11912341234',
       'sales@agent.com',
       'Sales Agent',
-      ['1', '2'],
+      'Imob',
       'sa-id-1',
     );
     const customerLead = new CustomerLead('cl-id-1', customer, salesAgent);

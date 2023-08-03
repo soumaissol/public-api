@@ -19,7 +19,7 @@ export default class CreateSalesAgentLead {
       validInput.phone,
       validInput.email,
       validInput.fullName,
-      validInput.agencyIds,
+      validInput.agency,
     );
 
     let salesAgent =

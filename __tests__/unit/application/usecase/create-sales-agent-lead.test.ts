@@ -88,7 +88,7 @@ describe('Test CreateSalesAgentLead usecase', () => {
     }
   });
 
-  it('should return error when agencyIds is not valid', async () => {
+  it('should return error when agency is not valid', async () => {
     try {
       const createSalesAgentLead = new CreateSalesAgentLead(buildFakeCrmGateway());
 
@@ -98,30 +98,12 @@ describe('Test CreateSalesAgentLead usecase', () => {
           email: 'user@email.com',
           fullName: 'Meu nome',
           licenseId: '1',
+          agency: true,
         }),
       );
       expect(true).toBe(false);
     } catch (err) {
-      expect(err).toEqual(new InvalidInput('invalid agency ids', 'invalid_agency_ids'));
-    }
-  });
-
-  it('should return error when agencyIds item is not valid', async () => {
-    try {
-      const createSalesAgentLead = new CreateSalesAgentLead(buildFakeCrmGateway());
-
-      await createSalesAgentLead.execute(
-        JSON.stringify({
-          phone: '11123456789',
-          email: 'user@email.com',
-          fullName: 'Meu nome',
-          licenseId: '1',
-          agencyIds: ['1', 2],
-        }),
-      );
-      expect(true).toBe(false);
-    } catch (err) {
-      expect(err).toEqual(new InvalidInput('invalid agency ids', 'invalid_agency_ids'));
+      expect(err).toEqual(new InvalidInput('invalid agency', 'invalid_agency'));
     }
   });
 
@@ -131,14 +113,14 @@ describe('Test CreateSalesAgentLead usecase', () => {
       email: 'user@email.com',
       fullName: 'Meu nome',
       licenseId: '1',
-      agencyIds: ['1', '2'],
+      agency: 'empresa',
     };
     const salesAgent = new SalesAgent(
       input.licenseId,
       input.phone,
       input.email,
       input.fullName,
-      input.agencyIds,
+      input.agency,
       'sa-id-1',
     );
 
@@ -169,14 +151,14 @@ describe('Test CreateSalesAgentLead usecase', () => {
       email: 'user@email.com',
       fullName: 'Meu nome',
       licenseId: '1',
-      agencyIds: ['1', '2'],
+      agency: 'empresa',
     };
     const salesAgent = new SalesAgent(
       input.licenseId,
       input.phone,
       input.email,
       input.fullName,
-      input.agencyIds,
+      input.agency,
       'sa-id-1',
     );
     const salesAgentLead = new SalesAgentLead('lead-id-1', salesAgent);
@@ -197,7 +179,7 @@ describe('Test CreateSalesAgentLead usecase', () => {
 
     expect(fakeCrmGateway.createSalesAgent).toHaveBeenCalledTimes(1);
     expect(fakeCrmGateway.createSalesAgent.mock.calls[0][0]).toEqual(
-      new SalesAgent(input.licenseId, input.phone, input.email, input.fullName, input.agencyIds),
+      new SalesAgent(input.licenseId, input.phone, input.email, input.fullName, input.agency),
     );
 
     expect(fakeCrmGateway.findSalesAgentLeadBySalesAgent).toHaveBeenCalledTimes(1);
@@ -212,9 +194,9 @@ describe('Test CreateSalesAgentLead usecase', () => {
       phone: '11123456789',
       email: 'user@email.com',
       fullName: 'Meu nome',
-      agencyIds: ['1', '2'],
+      agency: 'empresa',
     };
-    const salesAgent = new SalesAgent(null, input.phone, input.email, input.fullName, input.agencyIds, 'sa-id-1');
+    const salesAgent = new SalesAgent(null, input.phone, input.email, input.fullName, input.agency, 'sa-id-1');
     const salesAgentLead = new SalesAgentLead('lead-id-1', salesAgent);
 
     const fakeCrmGateway = {
@@ -235,7 +217,7 @@ describe('Test CreateSalesAgentLead usecase', () => {
 
     expect(fakeCrmGateway.createSalesAgent).toHaveBeenCalledTimes(1);
     expect(fakeCrmGateway.createSalesAgent.mock.calls[0][0]).toEqual(
-      new SalesAgent(null, input.phone, input.email, input.fullName, input.agencyIds),
+      new SalesAgent(null, input.phone, input.email, input.fullName, input.agency),
     );
 
     expect(fakeCrmGateway.findSalesAgentLeadBySalesAgent).toHaveBeenCalledTimes(1);
