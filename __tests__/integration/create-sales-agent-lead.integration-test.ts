@@ -31,6 +31,8 @@ describe('IntegrationTest CreateSalesAgentLead', () => {
         phone: faker.phone.number('+## ## #####-####'),
         email: faker.internet.email(),
         fullName: faker.person.fullName(),
+        occupation: faker.person.jobTitle(),
+        cityAndState: `${faker.location.city()}/${faker.location.state({ abbreviated: true })}`,
         licenseId: faker.number.int(1000000).toString(),
         agency: faker.company.name(),
       });
@@ -47,6 +49,8 @@ describe('IntegrationTest CreateSalesAgentLead', () => {
         phone: faker.phone.number('+## ## #####-####'),
         email: faker.internet.email(),
         fullName: faker.person.fullName(),
+        occupation: faker.person.jobTitle(),
+        cityAndState: `${faker.location.city()}/${faker.location.state({ abbreviated: true })}`,
         agency: faker.company.name(),
       });
       expect(output.status).toBe(HttpStatus.OK);
@@ -62,6 +66,8 @@ describe('IntegrationTest CreateSalesAgentLead', () => {
         phone: faker.phone.number('+## ## #####-####'),
         email: faker.internet.email(),
         fullName: faker.person.fullName(),
+        occupation: faker.person.jobTitle(),
+        cityAndState: `${faker.location.city()}/${faker.location.state({ abbreviated: true })}`,
       });
       expect(output.status).toBe(HttpStatus.OK);
       expect(output.data.leadId).not.toBeUndefined();
@@ -76,6 +82,8 @@ describe('IntegrationTest CreateSalesAgentLead', () => {
         phone: faker.phone.number('+## ## #####-####'),
         email: faker.internet.email(),
         fullName: faker.person.fullName(),
+        occupation: faker.person.jobTitle(),
+        cityAndState: `${faker.location.city()}/${faker.location.state({ abbreviated: true })}`,
         licenseId: faker.number.int(1000000).toString(),
         agency: faker.company.name(),
       };
@@ -102,6 +110,8 @@ describe('IntegrationTest CreateSalesAgentLead', () => {
         phone: faker.phone.number('+## ## #####-####'),
         email: faker.internet.email(),
         fullName: faker.person.fullName(),
+        occupation: faker.person.jobTitle(),
+        cityAndState: `${faker.location.city()}/${faker.location.state({ abbreviated: true })}`,
         agency: faker.company.name(),
       };
       const output = await axios.post(`${constants.API_URL}/salesAgentLead`, input);

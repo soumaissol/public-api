@@ -13,6 +13,8 @@ const salesAgentTableDefinitions = {
   fullNameFieldId: 'nome',
   agencyFieldId: 'ag_ncia',
   emailFieldId: 'email',
+  occupationFieldId: 'ocupacao',
+  cityAndStateFieldId: 'cidade_e_estado',
 };
 
 const customerLeadCardDefinitions = {

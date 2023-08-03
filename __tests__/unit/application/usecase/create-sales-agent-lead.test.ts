@@ -70,6 +70,41 @@ describe('Test CreateSalesAgentLead usecase', () => {
     }
   });
 
+  it('should return error when occupation is not valid', async () => {
+    try {
+      const createSalesAgentLead = new CreateSalesAgentLead(buildFakeCrmGateway());
+
+      await createSalesAgentLead.execute(
+        JSON.stringify({
+          phone: '11123456789',
+          email: 'user@email.com',
+          fullName: 'Meu nome',
+        }),
+      );
+      expect(true).toBe(false);
+    } catch (err) {
+      expect(err).toEqual(new InvalidInput('invalid occupation', 'invalid_occupation'));
+    }
+  });
+
+  it('should return error when cityAndState is not valid', async () => {
+    try {
+      const createSalesAgentLead = new CreateSalesAgentLead(buildFakeCrmGateway());
+
+      await createSalesAgentLead.execute(
+        JSON.stringify({
+          phone: '11123456789',
+          email: 'user@email.com',
+          fullName: 'Meu nome',
+          occupation: 'Corretor',
+        }),
+      );
+      expect(true).toBe(false);
+    } catch (err) {
+      expect(err).toEqual(new InvalidInput('invalid city and state', 'invalid_city_and_state'));
+    }
+  });
+
   it('should return error when licenseId is not valid', async () => {
     try {
       const createSalesAgentLead = new CreateSalesAgentLead(buildFakeCrmGateway());
@@ -79,6 +114,8 @@ describe('Test CreateSalesAgentLead usecase', () => {
           phone: '11123456789',
           email: 'user@email.com',
           fullName: 'Meu nome',
+          occupation: 'Corretor',
+          cityAndState: 'Cidade/es',
           licenseId: 1,
         }),
       );
@@ -97,6 +134,8 @@ describe('Test CreateSalesAgentLead usecase', () => {
           phone: '11123456789',
           email: 'user@email.com',
           fullName: 'Meu nome',
+          occupation: 'Corretor',
+          cityAndState: 'Cidade/es',
           licenseId: '1',
           agency: true,
         }),
@@ -112,6 +151,8 @@ describe('Test CreateSalesAgentLead usecase', () => {
       phone: '11123456789',
       email: 'user@email.com',
       fullName: 'Meu nome',
+      occupation: 'Corretor',
+      cityAndState: 'Cidade/es',
       licenseId: '1',
       agency: 'empresa',
     };
@@ -120,6 +161,8 @@ describe('Test CreateSalesAgentLead usecase', () => {
       input.phone,
       input.email,
       input.fullName,
+      input.occupation,
+      input.cityAndState,
       input.agency,
       'sa-id-1',
     );
@@ -150,6 +193,8 @@ describe('Test CreateSalesAgentLead usecase', () => {
       phone: '11123456789',
       email: 'user@email.com',
       fullName: 'Meu nome',
+      occupation: 'Corretor',
+      cityAndState: 'Cidade/es',
       licenseId: '1',
       agency: 'empresa',
     };
@@ -158,6 +203,8 @@ describe('Test CreateSalesAgentLead usecase', () => {
       input.phone,
       input.email,
       input.fullName,
+      input.occupation,
+      input.cityAndState,
       input.agency,
       'sa-id-1',
     );
@@ -179,7 +226,15 @@ describe('Test CreateSalesAgentLead usecase', () => {
 
     expect(fakeCrmGateway.createSalesAgent).toHaveBeenCalledTimes(1);
     expect(fakeCrmGateway.createSalesAgent.mock.calls[0][0]).toEqual(
-      new SalesAgent(input.licenseId, input.phone, input.email, input.fullName, input.agency),
+      new SalesAgent(
+        input.licenseId,
+        input.phone,
+        input.email,
+        input.fullName,
+        input.occupation,
+        input.cityAndState,
+        input.agency,
+      ),
     );
 
     expect(fakeCrmGateway.findSalesAgentLeadBySalesAgent).toHaveBeenCalledTimes(1);
@@ -194,9 +249,20 @@ describe('Test CreateSalesAgentLead usecase', () => {
       phone: '11123456789',
       email: 'user@email.com',
       fullName: 'Meu nome',
+      occupation: 'Corretor',
+      cityAndState: 'Cidade/es',
       agency: 'empresa',
     };
-    const salesAgent = new SalesAgent(null, input.phone, input.email, input.fullName, input.agency, 'sa-id-1');
+    const salesAgent = new SalesAgent(
+      null,
+      input.phone,
+      input.email,
+      input.fullName,
+      input.occupation,
+      input.cityAndState,
+      input.agency,
+      'sa-id-1',
+    );
     const salesAgentLead = new SalesAgentLead('lead-id-1', salesAgent);
 
     const fakeCrmGateway = {
@@ -217,7 +283,15 @@ describe('Test CreateSalesAgentLead usecase', () => {
 
     expect(fakeCrmGateway.createSalesAgent).toHaveBeenCalledTimes(1);
     expect(fakeCrmGateway.createSalesAgent.mock.calls[0][0]).toEqual(
-      new SalesAgent(null, input.phone, input.email, input.fullName, input.agency),
+      new SalesAgent(
+        null,
+        input.phone,
+        input.email,
+        input.fullName,
+        input.occupation,
+        input.cityAndState,
+        input.agency,
+      ),
     );
 
     expect(fakeCrmGateway.findSalesAgentLeadBySalesAgent).toHaveBeenCalledTimes(1);

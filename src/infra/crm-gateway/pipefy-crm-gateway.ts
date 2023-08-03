@@ -46,14 +46,30 @@ export default class PipefyCrmGateway implements CrmGateway {
   }
 
   async createSalesAgent(salesAgent: SalesAgent): Promise<SalesAgent> {
-    const tableRecord = await this.createRecord(this.salesAgentsTableId, [
+    const fieldAttributes = [
       new PipefyFieldAttribute(salesAgentTableDefinitions.emailFieldId, salesAgent.email),
       new PipefyFieldAttribute(salesAgentTableDefinitions.phoneFieldId, salesAgent.getPhone()),
       new PipefyFieldAttribute(salesAgentTableDefinitions.fullNameFieldId, salesAgent.fullName),
-      new PipefyFieldAttribute(salesAgentTableDefinitions.licenseFieldId, salesAgent.licenseId || ''),
-      new PipefyFieldAttribute(salesAgentTableDefinitions.agencyFieldId, salesAgent.agency || ''),
-    ]);
+    ];
 
+    if (salesAgent.occupation != null) {
+      fieldAttributes.push(
+        new PipefyFieldAttribute(salesAgentTableDefinitions.occupationFieldId, salesAgent.occupation),
+      );
+    }
+    if (salesAgent.cityAndState != null) {
+      fieldAttributes.push(
+        new PipefyFieldAttribute(salesAgentTableDefinitions.cityAndStateFieldId, salesAgent.cityAndState),
+      );
+    }
+    if (salesAgent.licenseId != null) {
+      fieldAttributes.push(new PipefyFieldAttribute(salesAgentTableDefinitions.licenseFieldId, salesAgent.licenseId));
+    }
+    if (salesAgent.agency != null) {
+      fieldAttributes.push(new PipefyFieldAttribute(salesAgentTableDefinitions.agencyFieldId, salesAgent.agency));
+    }
+
+    const tableRecord = await this.createRecord(this.salesAgentsTableId, fieldAttributes);
     return SalesAgent.buildSalesAgent(salesAgent, tableRecord.id);
   }
 
@@ -162,6 +178,8 @@ export default class PipefyCrmGateway implements CrmGateway {
           this.getFieldValue(pipefySalesAgent, salesAgentTableDefinitions.phoneFieldId),
           this.getFieldValue(pipefySalesAgent, salesAgentTableDefinitions.emailFieldId),
           this.getFieldValue(pipefySalesAgent, salesAgentTableDefinitions.fullNameFieldId),
+          this.getFieldValueOrNull(pipefySalesAgent, salesAgentTableDefinitions.occupationFieldId),
+          this.getFieldValueOrNull(pipefySalesAgent, salesAgentTableDefinitions.cityAndStateFieldId),
           this.getFieldValueOrNull(pipefySalesAgent, salesAgentTableDefinitions.agencyFieldId),
           pipefySalesAgent.node.id,
         )

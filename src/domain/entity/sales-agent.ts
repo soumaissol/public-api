@@ -8,6 +8,8 @@ class SalesAgent {
     phone: string,
     readonly email: string,
     readonly fullName: string,
+    readonly occupation: string | null,
+    readonly cityAndState: string | null,
     readonly agency: string | null,
     readonly id: string | null = null,
   ) {
@@ -20,6 +22,8 @@ class SalesAgent {
       salesAgent.getPhone(),
       salesAgent.email,
       salesAgent.fullName,
+      salesAgent.occupation,
+      salesAgent.cityAndState,
       salesAgent.agency,
       id,
     );

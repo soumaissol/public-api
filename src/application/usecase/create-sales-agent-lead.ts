@@ -19,6 +19,8 @@ export default class CreateSalesAgentLead {
       validInput.phone,
       validInput.email,
       validInput.fullName,
+      validInput.occupation,
+      validInput.cityAndState,
       validInput.agency,
     );
 

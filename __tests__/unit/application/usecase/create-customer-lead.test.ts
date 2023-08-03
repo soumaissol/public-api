@@ -192,6 +192,8 @@ describe('Test CreateCustomerLead usecase', () => {
       '11912341234',
       'sales@agent.com',
       'Sales Agent',
+      'corretor',
+      'cidade/es',
       'Imob',
       'sa-id-1',
     );
@@ -242,6 +244,8 @@ describe('Test CreateCustomerLead usecase', () => {
       '11912341234',
       'sales@agent.com',
       'Sales Agent',
+      'corretor',
+      'cidade/es',
       'Imob',
       'sa-id-1',
     );
