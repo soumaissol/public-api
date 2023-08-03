@@ -28,6 +28,7 @@ export default class PipefyCrmGateway implements CrmGateway {
     readonly customerLeadsPipeId: string,
     readonly salesAgentLeadsPipeId: string,
   ) {}
+
   async createSalesAgentLead(salesAgent: SalesAgent): Promise<SalesAgentLead> {
     const cardRecord = await this.createCard(this.salesAgentLeadsPipeId, [
       new PipefyFieldAttribute(salesAgentLeadCardDefinitions.salesAgentFieldId, salesAgent.id!),
@@ -49,7 +50,7 @@ export default class PipefyCrmGateway implements CrmGateway {
       new PipefyFieldAttribute(salesAgentTableDefinitions.emailFieldId, salesAgent.email),
       new PipefyFieldAttribute(salesAgentTableDefinitions.phoneFieldId, salesAgent.getPhone()),
       new PipefyFieldAttribute(salesAgentTableDefinitions.fullNameFieldId, salesAgent.fullName),
-      new PipefyFieldAttribute(salesAgentTableDefinitions.licenseFieldId, salesAgent.licenseId),
+      new PipefyFieldAttribute(salesAgentTableDefinitions.licenseFieldId, salesAgent.licenseId || ''),
       new PipefyFieldAttribute(salesAgentTableDefinitions.agencyIdsFieldId, salesAgent.agencyIds.toString()),
     ]);
 
@@ -129,11 +130,23 @@ export default class PipefyCrmGateway implements CrmGateway {
     return [];
   }
 
+  async findSalesAgentByEmail(email: string): Promise<SalesAgent | null> {
+    const pipefySalesAgent = await this.findRecord(
+      this.salesAgentsTableId,
+      new PipefySearchInput(salesAgentTableDefinitions.emailFieldId, email),
+    );
+    return this.buildSalesAgent(pipefySalesAgent);
+  }
+
   async findSalesAgentByLicenseId(salesAgentLicenseId: string): Promise<SalesAgent | null> {
     const pipefySalesAgent = await this.findRecord(
       this.salesAgentsTableId,
       new PipefySearchInput(salesAgentTableDefinitions.licenseFieldId, salesAgentLicenseId),
     );
+    return this.buildSalesAgent(pipefySalesAgent);
+  }
+
+  private buildSalesAgent(pipefySalesAgent: PipefyEdge | undefined): SalesAgent | null {
     return pipefySalesAgent
       ? new SalesAgent(
           this.getFieldValue(pipefySalesAgent, salesAgentTableDefinitions.licenseFieldId),

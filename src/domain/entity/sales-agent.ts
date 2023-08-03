@@ -4,7 +4,7 @@ class SalesAgent {
   private readonly phone: Phone;
 
   constructor(
-    readonly licenseId: string,
+    readonly licenseId: string | null,
     phone: string,
     readonly email: string,
     readonly fullName: string,

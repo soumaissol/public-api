@@ -19,6 +19,7 @@ const buildFakeCrmGateway = () => {
     createSalesAgentLead: jest.fn(),
     findSalesAgentLeadBySalesAgent: jest.fn(),
     createSalesAgent: jest.fn(),
+    findSalesAgentByEmail: jest.fn(),
   };
 };
 

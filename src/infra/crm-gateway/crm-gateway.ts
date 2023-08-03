@@ -12,4 +12,5 @@ export default interface CrmGateway {
   createCustomer(customer: Customer, salesAgent: SalesAgent): Promise<Customer>;
   findCustomerByPhone(phone: string): Promise<Customer | null>;
   findSalesAgentByLicenseId(salesAgentLicenseId: string): Promise<SalesAgent | null>;
+  findSalesAgentByEmail(email: string): Promise<SalesAgent | null>;
 }

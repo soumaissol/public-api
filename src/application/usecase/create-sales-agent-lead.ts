@@ -22,16 +22,20 @@ export default class CreateSalesAgentLead {
       validInput.agencyIds,
     );
 
-    let salesAgent = await this.crmGateway.findSalesAgentByLicenseId(inputSalesAgent.licenseId);
+    let salesAgent =
+      inputSalesAgent.licenseId != null
+        ? await this.crmGateway.findSalesAgentByLicenseId(inputSalesAgent.licenseId)
+        : await this.crmGateway.findSalesAgentByEmail(inputSalesAgent.email);
+
     if (salesAgent === null) {
-      logger.info(`creating new sales agent for ${inputSalesAgent.licenseId}`);
+      logger.info(`creating new sales agent for ${inputSalesAgent.licenseId || inputSalesAgent.email}`);
       salesAgent = await this.crmGateway.createSalesAgent(inputSalesAgent);
     }
 
     let salesAgentLead = await this.crmGateway.findSalesAgentLeadBySalesAgent(salesAgent);
     if (salesAgentLead != null) {
-      logger.warn(`lead for sales agent ${inputSalesAgent.licenseId}, already exists: ${salesAgentLead.id}`);
-      throw new SalesAgentLeadAlreadExists(inputSalesAgent.licenseId);
+      logger.warn(`lead for sales agent ${inputSalesAgent.email}, already exists: ${salesAgentLead.id}`);
+      throw new SalesAgentLeadAlreadExists(inputSalesAgent.licenseId || inputSalesAgent.email);
     }
 
     salesAgentLead = await this.crmGateway.createSalesAgentLead(salesAgent);

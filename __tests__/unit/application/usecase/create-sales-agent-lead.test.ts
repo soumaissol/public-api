@@ -15,6 +15,7 @@ const buildFakeCrmGateway = () => {
     createCustomerLead: jest.fn(),
     findSalesAgentLeadBySalesAgent: jest.fn(),
     createSalesAgent: jest.fn(),
+    findSalesAgentByEmail: jest.fn(),
   };
 };
 
@@ -24,6 +25,7 @@ describe('Test CreateSalesAgentLead usecase', () => {
       const createSalesAgentLead = new CreateSalesAgentLead(buildFakeCrmGateway());
 
       await createSalesAgentLead.execute(null);
+      expect(true).toBe(false);
     } catch (err) {
       expect(err).toEqual(new EmptyInput());
     }
@@ -34,6 +36,7 @@ describe('Test CreateSalesAgentLead usecase', () => {
       const createSalesAgentLead = new CreateSalesAgentLead(buildFakeCrmGateway());
 
       await createSalesAgentLead.execute(JSON.stringify({}));
+      expect(true).toBe(false);
     } catch (err) {
       expect(err).toEqual(new InvalidInput('invalid phone', 'invalid_phone'));
     }
@@ -44,6 +47,7 @@ describe('Test CreateSalesAgentLead usecase', () => {
       const createSalesAgentLead = new CreateSalesAgentLead(buildFakeCrmGateway());
 
       await createSalesAgentLead.execute(JSON.stringify({ phone: '11123456789', email: 'email.com' }));
+      expect(true).toBe(false);
     } catch (err) {
       expect(err).toEqual(new InvalidInput('invalid email', 'invalid_email'));
     }
@@ -60,6 +64,7 @@ describe('Test CreateSalesAgentLead usecase', () => {
           fullName: 1,
         }),
       );
+      expect(true).toBe(false);
     } catch (err) {
       expect(err).toEqual(new InvalidInput('invalid full name', 'invalid_full_name'));
     }
@@ -77,6 +82,7 @@ describe('Test CreateSalesAgentLead usecase', () => {
           licenseId: 1,
         }),
       );
+      expect(true).toBe(false);
     } catch (err) {
       expect(err).toEqual(new InvalidInput('invalid license id', 'invalid_license_id'));
     }
@@ -94,6 +100,7 @@ describe('Test CreateSalesAgentLead usecase', () => {
           licenseId: '1',
         }),
       );
+      expect(true).toBe(false);
     } catch (err) {
       expect(err).toEqual(new InvalidInput('invalid agency ids', 'invalid_agency_ids'));
     }
@@ -112,6 +119,7 @@ describe('Test CreateSalesAgentLead usecase', () => {
           agencyIds: ['1', 2],
         }),
       );
+      expect(true).toBe(false);
     } catch (err) {
       expect(err).toEqual(new InvalidInput('invalid agency ids', 'invalid_agency_ids'));
     }
@@ -143,8 +151,9 @@ describe('Test CreateSalesAgentLead usecase', () => {
 
     try {
       await createSalesAgentLead.execute(JSON.stringify(input));
+      expect(true).toBe(false);
     } catch (err) {
-      expect(err).toEqual(new SalesAgentLeadAlreadExists(input.licenseId));
+      expect(err).toEqual(new SalesAgentLeadAlreadExists(salesAgent.licenseId!));
 
       expect(fakeCrmGateway.findSalesAgentByLicenseId).toHaveBeenCalledTimes(1);
       expect(fakeCrmGateway.findSalesAgentByLicenseId.mock.calls[0][0]).toBe(input.licenseId);
@@ -181,24 +190,58 @@ describe('Test CreateSalesAgentLead usecase', () => {
     };
     const createSalesAgentLead = new CreateSalesAgentLead(fakeCrmGateway);
 
-    try {
-      await createSalesAgentLead.execute(JSON.stringify(input));
-    } catch (err) {
-      expect(err).toEqual(new SalesAgentLeadAlreadExists(input.licenseId));
+    await createSalesAgentLead.execute(JSON.stringify(input));
 
-      expect(fakeCrmGateway.findSalesAgentByLicenseId).toHaveBeenCalledTimes(1);
-      expect(fakeCrmGateway.findSalesAgentByLicenseId.mock.calls[0][0]).toBe(input.licenseId);
+    expect(fakeCrmGateway.findSalesAgentByLicenseId).toHaveBeenCalledTimes(1);
+    expect(fakeCrmGateway.findSalesAgentByLicenseId.mock.calls[0][0]).toBe(input.licenseId);
 
-      expect(fakeCrmGateway.createSalesAgent).toHaveBeenCalledTimes(1);
-      expect(fakeCrmGateway.createSalesAgent.mock.calls[0][0]).toEqual(
-        new SalesAgent(input.licenseId, input.phone, input.email, input.fullName, input.agencyIds),
-      );
+    expect(fakeCrmGateway.createSalesAgent).toHaveBeenCalledTimes(1);
+    expect(fakeCrmGateway.createSalesAgent.mock.calls[0][0]).toEqual(
+      new SalesAgent(input.licenseId, input.phone, input.email, input.fullName, input.agencyIds),
+    );
 
-      expect(fakeCrmGateway.findSalesAgentLeadBySalesAgent).toHaveBeenCalledTimes(1);
-      expect(fakeCrmGateway.findSalesAgentLeadBySalesAgent.mock.calls[0][0]).toBe(salesAgent);
+    expect(fakeCrmGateway.findSalesAgentLeadBySalesAgent).toHaveBeenCalledTimes(1);
+    expect(fakeCrmGateway.findSalesAgentLeadBySalesAgent.mock.calls[0][0]).toBe(salesAgent);
 
-      expect(fakeCrmGateway.createSalesAgentLead).toHaveBeenCalledTimes(1);
-      expect(fakeCrmGateway.createSalesAgentLead.mock.calls[0][0]).toBe(salesAgent);
-    }
+    expect(fakeCrmGateway.createSalesAgentLead).toHaveBeenCalledTimes(1);
+    expect(fakeCrmGateway.createSalesAgentLead.mock.calls[0][0]).toBe(salesAgent);
+  });
+
+  it('should create new sales agent lead when all is valid without license id', async () => {
+    const input = {
+      phone: '11123456789',
+      email: 'user@email.com',
+      fullName: 'Meu nome',
+      agencyIds: ['1', '2'],
+    };
+    const salesAgent = new SalesAgent(null, input.phone, input.email, input.fullName, input.agencyIds, 'sa-id-1');
+    const salesAgentLead = new SalesAgentLead('lead-id-1', salesAgent);
+
+    const fakeCrmGateway = {
+      ...buildFakeCrmGateway(),
+      findSalesAgentByEmail: jest.fn().mockResolvedValueOnce(null),
+      createSalesAgent: jest.fn().mockResolvedValueOnce(salesAgent),
+      findSalesAgentLeadBySalesAgent: jest.fn().mockResolvedValueOnce(null),
+      createSalesAgentLead: jest.fn().mockResolvedValueOnce(salesAgentLead),
+    };
+    const createSalesAgentLead = new CreateSalesAgentLead(fakeCrmGateway);
+
+    await createSalesAgentLead.execute(JSON.stringify(input));
+
+    expect(fakeCrmGateway.findSalesAgentByLicenseId).toHaveBeenCalledTimes(0);
+
+    expect(fakeCrmGateway.findSalesAgentByEmail).toHaveBeenCalledTimes(1);
+    expect(fakeCrmGateway.findSalesAgentByEmail.mock.calls[0][0]).toBe(input.email);
+
+    expect(fakeCrmGateway.createSalesAgent).toHaveBeenCalledTimes(1);
+    expect(fakeCrmGateway.createSalesAgent.mock.calls[0][0]).toEqual(
+      new SalesAgent(null, input.phone, input.email, input.fullName, input.agencyIds),
+    );
+
+    expect(fakeCrmGateway.findSalesAgentLeadBySalesAgent).toHaveBeenCalledTimes(1);
+    expect(fakeCrmGateway.findSalesAgentLeadBySalesAgent.mock.calls[0][0]).toBe(salesAgent);
+
+    expect(fakeCrmGateway.createSalesAgentLead).toHaveBeenCalledTimes(1);
+    expect(fakeCrmGateway.createSalesAgentLead.mock.calls[0][0]).toBe(salesAgent);
   });
 });

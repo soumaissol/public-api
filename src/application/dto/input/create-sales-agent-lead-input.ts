@@ -13,8 +13,8 @@ export default class CreateSalesAgentLeadInput {
   @jf.string().required().error(new InvalidInput('invalid full name', 'invalid_full_name'))
   public fullName: string;
 
-  @jf.string().required().error(new InvalidInput('invalid license id', 'invalid_license_id'))
-  public licenseId: string;
+  @jf.string().allow('', null).error(new InvalidInput('invalid license id', 'invalid_license_id'))
+  public licenseId: string | null;
 
   @jf
     .array()
@@ -29,7 +29,7 @@ export default class CreateSalesAgentLeadInput {
     this.phone = inputData.phone;
     this.email = inputData.email;
     this.fullName = inputData.fullName;
-    this.licenseId = inputData.licenseId;
+    this.licenseId = inputData.licenseId || null;
     this.agencyIds = inputData.agencyIds;
   }
 }
