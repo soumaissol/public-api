@@ -6,9 +6,12 @@ SouMaisSol public-api, current integrated in our landing page. This project uses
 * Nvm - [Install nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
 * Docker - [Install Docker community edition](https://hub.docker.com/search/?type=edition&offering=community).
 
-You must have aws access configured under the profile `soumaissol`.
-
 ## Install, build and run project
+
+You must have aws access configured under the profile `soumaissol` for prod and `soumaissolstaging` for staging.
+
+You must have this environment variables configured:
+- PIPEFY_AUTH_TOKEN: used to deploy
 
 ```bash
 nvm install
@@ -45,7 +48,8 @@ npm run invoke:distributors
 Tests are defined in the `__tests__` folder in this project. Use `npm` to install the [Jest test framework](https://jestjs.io/) and run unit tests.
 
 ```bash
-sh deploy.sh
+sh ./scripts/deploy-staging.sh
+sh ./scripts/deploy-production.sh
 ```
 ## Project structure
 

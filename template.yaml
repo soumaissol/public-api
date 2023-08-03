@@ -109,7 +109,7 @@ Resources:
       Timeout: 100
       Policies:
       Events:
-        Api:
+        Api:  
           Type: Api
           Properties:
             RestApiId: !Ref SimulationApi
