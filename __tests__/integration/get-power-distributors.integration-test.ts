@@ -26,7 +26,7 @@ describe('IntegrationTest GetPowerDistributors', () => {
       try {
         await axios.get(`${constants.API_URL}/simulations/power-distributors/123`, {
           headers: {
-            'Accept-Language': 'pt-br',
+            'Accept-Language': constants.PTBR_ACCEPTED_LANGUAGE,
           },
         });
       } catch (err) {

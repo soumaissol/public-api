@@ -66,7 +66,7 @@ describe('IntegrationTest CreateCustomerLead', () => {
           },
           {
             headers: {
-              'Accept-Language': 'pt-br',
+              'Accept-Language': constants.PTBR_ACCEPTED_LANGUAGE,
             },
           },
         );
