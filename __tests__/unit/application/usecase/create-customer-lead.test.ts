@@ -1,5 +1,4 @@
 import CreateCustomerLeadOutput from '../../../../src/application/dto/output/create-customer-lead-output';
-import EmptyInput from '../../../../src/application/errors/empty-input';
 import InvalidInput from '../../../../src/application/errors/invalid-input';
 import CreateCustomerLead from '../../../../src/application/usecase/create-customer-lead';
 import Customer from '../../../../src/domain/entity/customer';
@@ -32,8 +31,14 @@ describe('Test CreateCustomerLead usecase', () => {
       const createCustomerLead = new CreateCustomerLead(buildFakeCrmGateway());
 
       await createCustomerLead.execute(locale, null);
+      expect(true).toBe(false);
     } catch (err) {
-      expect(err).toEqual(new EmptyInput());
+      expect(err).toEqual(
+        new InvalidInput(
+          'sales agent license id or email must be given to identify',
+          'sales_agent_license_id_and_email_null',
+        ),
+      );
     }
   });
 
@@ -42,8 +47,14 @@ describe('Test CreateCustomerLead usecase', () => {
       const createCustomerLead = new CreateCustomerLead(buildFakeCrmGateway());
 
       await createCustomerLead.execute(locale, JSON.stringify({}));
+      expect(true).toBe(false);
     } catch (err) {
-      expect(err).toEqual(new InvalidInput('invalid phone', 'invalid_phone'));
+      expect(err).toEqual(
+        new InvalidInput(
+          'sales agent license id or email must be given to identify',
+          'sales_agent_license_id_and_email_null',
+        ),
+      );
     }
   });
 
@@ -51,7 +62,11 @@ describe('Test CreateCustomerLead usecase', () => {
     try {
       const createCustomerLead = new CreateCustomerLead(buildFakeCrmGateway());
 
-      await createCustomerLead.execute(locale, JSON.stringify({ phone: '11123456789', email: 'email.com' }));
+      await createCustomerLead.execute(
+        locale,
+        JSON.stringify({ phone: '11123456789', email: 'email.com', salesAgentLicenseId: '178123' }),
+      );
+      expect(true).toBe(false);
     } catch (err) {
       expect(err).toEqual(new InvalidInput('invalid email', 'invalid_email'));
     }
@@ -67,8 +82,10 @@ describe('Test CreateCustomerLead usecase', () => {
           phone: '11123456789',
           email: 'user@email.com',
           fullName: 1,
+          salesAgentLicenseId: '178123',
         }),
       );
+      expect(true).toBe(false);
     } catch (err) {
       expect(err).toEqual(new InvalidInput('invalid full name', 'invalid_full_name'));
     }
@@ -85,8 +102,10 @@ describe('Test CreateCustomerLead usecase', () => {
           email: 'user@email.com',
           fullName: 'Meu nome',
           zip: '1234',
+          salesAgentLicenseId: '178123',
         }),
       );
+      expect(true).toBe(false);
     } catch (err) {
       expect(err).toEqual(new InvalidInput('invalid zip', 'invalid_zip'));
     }
@@ -104,8 +123,10 @@ describe('Test CreateCustomerLead usecase', () => {
           fullName: 'Meu nome',
           zip: '12345678',
           energyConsumption: -100,
+          salesAgentLicenseId: '178123',
         }),
       );
+      expect(true).toBe(false);
     } catch (err) {
       expect(err).toEqual(new InvalidInput('invalid energyConsumption', 'invalid_energy_consumption'));
     }
@@ -126,8 +147,30 @@ describe('Test CreateCustomerLead usecase', () => {
           salesAgentLicenseId: -100,
         }),
       );
+      expect(true).toBe(false);
     } catch (err) {
       expect(err).toEqual(new InvalidInput('invalid sales agent license id', 'invalid_sales_agent_license_id'));
+    }
+  });
+
+  it('should return error when salesAgentLicenseId is not valid', async () => {
+    try {
+      const createCustomerLead = new CreateCustomerLead(buildFakeCrmGateway());
+
+      await createCustomerLead.execute(
+        locale,
+        JSON.stringify({
+          phone: '11123456789',
+          email: 'user@email.com',
+          fullName: 'Meu nome',
+          zip: '12345678',
+          energyConsumption: 100,
+          salesAgentEmail: 'wrongemail',
+        }),
+      );
+      expect(true).toBe(false);
+    } catch (err) {
+      expect(err).toEqual(new InvalidInput('invalid sales agent email', 'invalid_sales_agent_email'));
     }
   });
 
@@ -146,12 +189,13 @@ describe('Test CreateCustomerLead usecase', () => {
           salesAgentLicenseId: '178123',
         }),
       );
+      expect(true).toBe(false);
     } catch (err) {
       expect(err).toEqual(new InvalidPhone());
     }
   });
 
-  it('should return error when sales agent is not found', async () => {
+  it('should return error when sales agent is not found by licenseId', async () => {
     const fakeCrmGateway = {
       ...buildFakeCrmGateway(),
       findSalesAgentByLicenseId: jest.fn().mockResolvedValueOnce(null),
@@ -171,11 +215,41 @@ describe('Test CreateCustomerLead usecase', () => {
           salesAgentLicenseId,
         }),
       );
+      expect(true).toBe(false);
     } catch (err) {
-      expect(err).toEqual(new SalesAgentNotFound(locale, salesAgentLicenseId));
+      expect(err).toEqual(SalesAgentNotFound.byLicenseId(locale, salesAgentLicenseId));
 
       expect(fakeCrmGateway.findSalesAgentByLicenseId).toHaveBeenCalledTimes(1);
       expect(fakeCrmGateway.findSalesAgentByLicenseId.mock.calls[0][0]).toBe(salesAgentLicenseId);
+    }
+  });
+
+  it('should return error when sales agent is not found by email', async () => {
+    const fakeCrmGateway = {
+      ...buildFakeCrmGateway(),
+      findSalesAgentByEmail: jest.fn().mockResolvedValueOnce(null),
+    };
+    const createCustomerLead = new CreateCustomerLead(fakeCrmGateway);
+    const salesAgentEmail = 'salesagent@email.com';
+
+    try {
+      await createCustomerLead.execute(
+        locale,
+        JSON.stringify({
+          phone: '11123456789',
+          email: 'user@email.com',
+          fullName: 'Meu nome',
+          zip: '12345678',
+          energyConsumption: 100,
+          salesAgentEmail,
+        }),
+      );
+      expect(true).toBe(false);
+    } catch (err) {
+      expect(err).toEqual(SalesAgentNotFound.byEmail(locale, salesAgentEmail));
+
+      expect(fakeCrmGateway.findSalesAgentByEmail).toHaveBeenCalledTimes(1);
+      expect(fakeCrmGateway.findSalesAgentByEmail.mock.calls[0][0]).toBe(salesAgentEmail);
     }
   });
 
@@ -216,8 +290,9 @@ describe('Test CreateCustomerLead usecase', () => {
     const createCustomerLead = new CreateCustomerLead(fakeCrmGateway);
     try {
       await createCustomerLead.execute(locale, JSON.stringify(input));
+      expect(true).toBe(false);
     } catch (err) {
-      expect(err).toEqual(new CustomerLeadAlreadExists(locale, customer.id!));
+      expect(err).toEqual(new CustomerLeadAlreadExists(locale, customer.getPhone()));
 
       expect(fakeCrmGateway.findSalesAgentByLicenseId).toHaveBeenCalledTimes(1);
       expect(fakeCrmGateway.findSalesAgentByLicenseId.mock.calls[0][0]).toBe(input.salesAgentLicenseId);

@@ -19,8 +19,14 @@ export default class CreateCustomerLeadInput {
   @jf.number().min(0.0).required().error(new InvalidInput('invalid energyConsumption', 'invalid_energy_consumption'))
   public energyConsumption: number;
 
-  @jf.string().required().error(new InvalidInput('invalid sales agent license id', 'invalid_sales_agent_license_id'))
-  public salesAgentLicenseId: string;
+  @jf
+    .string()
+    .allow('', null)
+    .error(new InvalidInput('invalid sales agent license id', 'invalid_sales_agent_license_id'))
+  public salesAgentLicenseId: string | null;
+
+  @jf.string().email().allow('', null).error(new InvalidInput('invalid sales agent email', 'invalid_sales_agent_email'))
+  public salesAgentEmail: string | null;
 
   constructor(input: any) {
     const inputData = safelyParseData(input);
@@ -30,6 +36,14 @@ export default class CreateCustomerLeadInput {
     this.fullName = inputData.fullName;
     this.zip = inputData.zip;
     this.energyConsumption = inputData.energyConsumption;
-    this.salesAgentLicenseId = inputData.salesAgentLicenseId;
+    this.salesAgentLicenseId = inputData.salesAgentLicenseId || null;
+    this.salesAgentEmail = inputData.salesAgentEmail || null;
+
+    if (this.salesAgentLicenseId === null && this.salesAgentEmail === null) {
+      throw new InvalidInput(
+        'sales agent license id or email must be given to identify',
+        'sales_agent_license_id_and_email_null',
+      );
+    }
   }
 }

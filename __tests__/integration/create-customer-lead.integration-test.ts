@@ -6,6 +6,7 @@ import constants from './constants';
 
 describe('IntegrationTest CreateCustomerLead', () => {
   const existentSalesAgentLicenseId = '178123';
+  const existentSalesAgentEmail = 'fake2@email.com';
   it(
     'should return error when input is invalid',
     async () => {
@@ -18,8 +19,8 @@ describe('IntegrationTest CreateCustomerLead', () => {
         expect(err).toHaveProperty('response');
         const response = (err as any).response;
         expect(response.status).toBe(HttpStatus.BAD_REQUEST);
-        expect(response.data.code).toBe('invalid_email');
-        expect(response.data.message).toBe('invalid email');
+        expect(response.data.code).toBe('sales_agent_license_id_and_email_null');
+        expect(response.data.message).toBe('sales agent license id or email must be given to identify');
       }
     },
     constants.DEFAULT_TIMEOUT,
@@ -43,14 +44,14 @@ describe('IntegrationTest CreateCustomerLead', () => {
         const response = (err as any).response;
         expect(response.status).toBe(HttpStatus.BAD_REQUEST);
         expect(response.data.code).toBe('sales_agent_not_found');
-        expect(response.data.message).toBe(`sales agent not found for id ${salesAgentLicenseId}`);
+        expect(response.data.message).toBe(`sales agent not found for license id ${salesAgentLicenseId}`);
       }
     },
     constants.DEFAULT_TIMEOUT,
   );
 
   it(
-    'should return translated error when sales agent is not found',
+    'should return translated error when sales agent is not found by license id',
     async () => {
       const salesAgentLicenseId = '1';
       try {
@@ -75,7 +76,43 @@ describe('IntegrationTest CreateCustomerLead', () => {
         const response = (err as any).response;
         expect(response.status).toBe(HttpStatus.BAD_REQUEST);
         expect(response.data.code).toBe('sales_agent_not_found');
-        expect(response.data.message).toBe(`corretor não encontrado com o número ${salesAgentLicenseId}`);
+        expect(response.data.message).toBe(
+          `Não foi possível localizar um corretor cadastrado com o CRECI ${salesAgentLicenseId}`,
+        );
+      }
+    },
+    constants.DEFAULT_TIMEOUT,
+  );
+
+  it(
+    'should return translated error when sales agent is not found',
+    async () => {
+      const salesAgentEmail = faker.internet.email();
+      try {
+        await axios.post(
+          `${constants.API_URL}/customerLead`,
+          {
+            phone: faker.phone.number('+## ## #####-####'),
+            email: faker.internet.email(),
+            fullName: faker.person.fullName(),
+            zip: faker.location.zipCode('########'),
+            energyConsumption: faker.number.int(10000),
+            salesAgentEmail,
+          },
+          {
+            headers: {
+              'Accept-Language': constants.PTBR_ACCEPTED_LANGUAGE,
+            },
+          },
+        );
+      } catch (err) {
+        expect(err).toHaveProperty('response');
+        const response = (err as any).response;
+        expect(response.status).toBe(HttpStatus.BAD_REQUEST);
+        expect(response.data.code).toBe('sales_agent_not_found');
+        expect(response.data.message).toBe(
+          `Não foi possível localizar um corretor cadastrado com o e-mail ${salesAgentEmail}`,
+        );
       }
     },
     constants.DEFAULT_TIMEOUT,
@@ -91,6 +128,23 @@ describe('IntegrationTest CreateCustomerLead', () => {
         zip: faker.location.zipCode('########'),
         energyConsumption: faker.number.int(10000),
         salesAgentLicenseId: existentSalesAgentLicenseId,
+      });
+      expect(output.status).toBe(HttpStatus.OK);
+      expect(output.data.leadId).not.toBeUndefined();
+    },
+    constants.DEFAULT_TIMEOUT,
+  );
+
+  it(
+    'should return new customer lead when all input is valid again',
+    async () => {
+      const output = await axios.post(`${constants.API_URL}/customerLead`, {
+        phone: faker.phone.number('+## ## #####-####'),
+        email: faker.internet.email(),
+        fullName: faker.person.fullName(),
+        zip: faker.location.zipCode('########'),
+        energyConsumption: faker.number.int(10000),
+        salesAgentEmail: existentSalesAgentEmail,
       });
       expect(output.status).toBe(HttpStatus.OK);
       expect(output.data.leadId).not.toBeUndefined();

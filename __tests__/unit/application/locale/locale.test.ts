@@ -46,8 +46,8 @@ describe('Test Locale', () => {
     const locale = new Locale();
     locale.setLocale('en');
     locale.setLocale('PT-Br');
-    expect(locale.translate('sales agent not found for id %s', 'id-1')).toBe(
-      'corretor não encontrado com o número id-1',
+    expect(locale.translate('sales agent not found for email %s', 'email@email.com')).toBe(
+      'Não foi possível localizar um corretor cadastrado com o e-mail email@email.com',
     );
   });
 
@@ -56,7 +56,7 @@ describe('Test Locale', () => {
     locale.setLocale('en');
     locale.setLocale('PT-Br');
     expect(new SalesAgentLeadAlreadExists(locale, 'id-1').message).toBe(
-      'corretor já cadastrado com identificador id-1',
+      'O corretor já cadastrado com identificador id-1. Por favor, aguarde nosso contato',
     );
   });
 
@@ -64,6 +64,8 @@ describe('Test Locale', () => {
     const locale = new Locale();
     locale.setLocale('en');
     locale.setLocale('PT-Br');
-    expect(new CustomerLeadAlreadExists(locale, 'id-2').message).toBe('orçamento já cadastrado para o cliente id-2');
+    expect(new CustomerLeadAlreadExists(locale, 'id-2').message).toBe(
+      'O orçamento já cadastrado para o cliente id-2. Por favor, aguarde nosso contato',
+    );
   });
 });

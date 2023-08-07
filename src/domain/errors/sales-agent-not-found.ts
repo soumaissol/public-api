@@ -1,9 +1,17 @@
-import Locale from '../../locale/locale';
+import type Locale from '../../locale/locale';
 import GenericError from './generic-error';
 
 class SalesAgentNotFound extends GenericError {
-  constructor(locale: Locale, id: string) {
-    super(locale.translate('sales agent not found for id %s', id), 'sales_agent_not_found');
+  constructor(message: string) {
+    super(message, 'sales_agent_not_found');
+  }
+
+  static byLicenseId(locale: Locale, licenseId: string): SalesAgentNotFound {
+    return new SalesAgentNotFound(locale.translate('sales agent not found for license id %s', licenseId));
+  }
+
+  static byEmail(locale: Locale, email: string): SalesAgentNotFound {
+    return new SalesAgentNotFound(locale.translate('sales agent not found for email %s', email));
   }
 }
 

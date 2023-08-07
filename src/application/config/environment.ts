@@ -11,28 +11,28 @@ const isProduction = (): boolean => {
   return getStage() === Stage.Production;
 };
 
-const getPipefyAuthToken = (): Stage => {
-  return process.env.PIPEFY_AUTH_TOKEN as Stage;
+const getPipefyAuthToken = (): string => {
+  return process.env.PIPEFY_AUTH_TOKEN || '';
 };
 
-const getPipefyApiUrl = (): Stage => {
-  return process.env.PIPEFY_API_URL as Stage;
+const getPipefyApiUrl = (): string => {
+  return process.env.PIPEFY_API_URL || '';
 };
 
-const getPipefyCustomerTableId = (): Stage => {
-  return process.env.PIPEFY_CUSTOMERS_TABLE_ID as Stage;
+const getPipefyCustomerTableId = (): string => {
+  return process.env.PIPEFY_CUSTOMERS_TABLE_ID || '';
 };
 
-const getPipefySalesAgentsTableId = (): Stage => {
-  return process.env.PIPEFY_SALES_AGENTS_TABLE_ID as Stage;
+const getPipefySalesAgentsTableId = (): string => {
+  return process.env.PIPEFY_SALES_AGENTS_TABLE_ID || '';
 };
 
-const getPipefyCustomerLeadsPipeId = (): Stage => {
-  return process.env.PIPEFY_CUSTOMER_LEADS_PIPE_ID as Stage;
+const getPipefyCustomerLeadsPipeId = (): string => {
+  return process.env.PIPEFY_CUSTOMER_LEADS_PIPE_ID || '';
 };
 
-const getPipefySalesAgentLeadsPipeId = (): Stage => {
-  return process.env.PIPEFY_SALES_AGENT_LEADS_PIPE_ID as Stage;
+const getPipefySalesAgentLeadsPipeId = (): string => {
+  return process.env.PIPEFY_SALES_AGENT_LEADS_PIPE_ID || '';
 };
 
 export {
