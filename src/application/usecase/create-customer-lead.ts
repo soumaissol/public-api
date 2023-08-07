@@ -2,6 +2,7 @@ import Customer from '../../domain/entity/customer';
 import CustomerLeadAlreadExists from '../../domain/errors/customer-lead-alread-exists';
 import SalesAgentNotFound from '../../domain/errors/sales-agent-not-found';
 import CrmGateway from '../../infra/crm-gateway/crm-gateway';
+import type Locale from '../../locale/locale';
 import { convertAndValidateInput } from '../dto/input/common-input';
 import CreateCustomerLeadInput from '../dto/input/create-customer-lead-input';
 import CreateCustomerLeadOutput from '../dto/output/create-customer-lead-output';
@@ -10,7 +11,7 @@ import Logger from '../logger/logger';
 export default class CreateCustomerLead {
   constructor(readonly crmGateway: CrmGateway) {}
 
-  async execute(input: any): Promise<CreateCustomerLeadOutput> {
+  async execute(locale: Locale, input: any): Promise<CreateCustomerLeadOutput> {
     const logger = Logger.get();
     const validInput = convertAndValidateInput<CreateCustomerLeadInput>(input, new CreateCustomerLeadInput(input));
 
@@ -24,7 +25,7 @@ export default class CreateCustomerLead {
 
     const salesAgent = await this.crmGateway.findSalesAgentByLicenseId(validInput.salesAgentLicenseId);
     if (salesAgent === null) {
-      throw new SalesAgentNotFound(validInput.salesAgentLicenseId);
+      throw new SalesAgentNotFound(locale, validInput.salesAgentLicenseId);
     }
 
     let customer = await this.crmGateway.findCustomerByPhone(inputCustomer.getPhone());
@@ -36,7 +37,7 @@ export default class CreateCustomerLead {
     let customerLead = await this.crmGateway.findCustomerLeadByCustomer(customer, salesAgent);
     if (customerLead != null) {
       logger.warn(`lead for customer ${customer.id}, already exists: ${customerLead.id}`);
-      throw new CustomerLeadAlreadExists(customer.id!);
+      throw new CustomerLeadAlreadExists(locale, customer.id!);
     }
 
     customerLead = await this.crmGateway.createCustomerLead(customer, salesAgent);

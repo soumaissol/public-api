@@ -1,4 +1,5 @@
 import SolarEnergyGateway from '../../infra/solar-energy-gateway/solar-energy-gateway';
+import type Locale from '../../locale/locale';
 import { convertAndValidateInput } from '../dto/input/common-input';
 import GetPowerDistributorsInput from '../dto/input/get-power-distributors-input';
 import { GetPowerDistributorsOutput, PowerDistributorOutput } from '../dto/output/get-power-distributors-output';
@@ -7,7 +8,7 @@ import Logger from '../logger/logger';
 export default class GetPowerDistributors {
   constructor(readonly solarEnergyGateway: SolarEnergyGateway) {}
 
-  async execute(input: any): Promise<GetPowerDistributorsOutput | null> {
+  async execute(_: Locale, input: any): Promise<GetPowerDistributorsOutput | null> {
     const logger = Logger.get();
     const validInput = convertAndValidateInput<GetPowerDistributorsInput>(input, new GetPowerDistributorsInput(input));
 

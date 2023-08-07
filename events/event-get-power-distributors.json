@@ -1,6 +1,9 @@
 {
     "httpMethod": "GET",
     "pathParameters": {
-        "zip": "01141000"
+        "zip": "a"
+    },
+    "headers": {
+        "Accept-Language": "PT-BR"
     }
 }

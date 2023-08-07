@@ -1,7 +1,9 @@
 class GenericError extends Error {
-  readonly code: string;
-
-  constructor(message: string, code: string) {
+  constructor(
+    message: string,
+    readonly code: string,
+    readonly needsTranslation: boolean = false,
+  ) {
     super();
     this.message = message;
     this.code = code;

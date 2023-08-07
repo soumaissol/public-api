@@ -8,10 +8,7 @@
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "outDir": "./dist/",
-    "lib": [
-      "es2022",
-      "dom"
-    ],
+    "lib": ["es2022", "dom"],
     "moduleResolution": "node",
     "esModuleInterop": true,
     "resolveJsonModule": true,
@@ -20,14 +17,7 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true
   },
-  "include": [
-    "src",
-    "__tests__"
-  ],
-  "exclude": [
-    ".esbuild"
-  ],
-  "excludeTypes": [
-    "types/node"
-  ]
+  "include": ["src", "__tests__"],
+  "exclude": [".esbuild"],
+  "excludeTypes": ["types/node"]
 }

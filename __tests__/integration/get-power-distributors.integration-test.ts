@@ -21,6 +21,26 @@ describe('IntegrationTest GetPowerDistributors', () => {
   );
 
   it(
+    'should return translated error when input is invalid',
+    async () => {
+      try {
+        await axios.get(`${constants.API_URL}/simulations/power-distributors/123`, {
+          headers: {
+            'Accept-Language': 'pt-br',
+          },
+        });
+      } catch (err) {
+        expect(err).toHaveProperty('response');
+        const response = (err as any).response;
+        expect(response.status).toBe(HttpStatus.BAD_REQUEST);
+        expect(response.data.code).toBe('invalid_zip');
+        expect(response.data.message).toBe('cep inválido');
+      }
+    },
+    constants.DEFAULT_TIMEOUT,
+  );
+
+  it(
     'should return listing when zip is valid',
     async () => {
       const output = await axios.get(`${constants.API_URL}/simulations/power-distributors/12312123`);

@@ -3,13 +3,16 @@ import InvalidInput from '../../../../src/application/errors/invalid-input';
 import CalculateSimulation from '../../../../src/application/usecase/calculate-simulation';
 import FakeSolarEnergyGateway from '../../../../src/infra/solar-energy-gateway/fake-solar-energy-gateway';
 import type SolarEnergyGateway from '../../../../src/infra/solar-energy-gateway/solar-energy-gateway';
+import Locale from '../../../../src/locale/locale';
+
+const locale = new Locale();
 
 describe('Test CalculateSimulation usecase', () => {
   it('should return error when input is null', async () => {
     try {
       const calculateSimulation = new CalculateSimulation(new FakeSolarEnergyGateway());
 
-      await calculateSimulation.execute(null);
+      await calculateSimulation.execute(locale, null);
     } catch (err) {
       expect(err).toEqual(new EmptyInput());
     }
@@ -19,7 +22,7 @@ describe('Test CalculateSimulation usecase', () => {
     try {
       const calculateSimulation = new CalculateSimulation(new FakeSolarEnergyGateway());
 
-      await calculateSimulation.execute(JSON.stringify({}));
+      await calculateSimulation.execute(locale, JSON.stringify({}));
     } catch (err) {
       expect(err).toEqual(new InvalidInput('invalid powerDistributorId', 'invalid_power_distributor_id'));
     }
@@ -29,7 +32,7 @@ describe('Test CalculateSimulation usecase', () => {
     try {
       const calculateSimulation = new CalculateSimulation(new FakeSolarEnergyGateway());
 
-      await calculateSimulation.execute(JSON.stringify({ powerDistributorId: 'powerDistributorId' }));
+      await calculateSimulation.execute(locale, JSON.stringify({ powerDistributorId: 'powerDistributorId' }));
     } catch (err) {
       expect(err).toEqual(new InvalidInput('invalid powerDistributorId', 'invalid_power_distributor_id'));
     }
@@ -39,7 +42,7 @@ describe('Test CalculateSimulation usecase', () => {
     try {
       const calculateSimulation = new CalculateSimulation(new FakeSolarEnergyGateway());
 
-      await calculateSimulation.execute(JSON.stringify({ powerDistributorId: 1, email: 'email.com' }));
+      await calculateSimulation.execute(locale, JSON.stringify({ powerDistributorId: 1, email: 'email.com' }));
     } catch (err) {
       expect(err).toEqual(new InvalidInput('invalid email', 'invalid_email'));
     }
@@ -50,6 +53,7 @@ describe('Test CalculateSimulation usecase', () => {
       const calculateSimulation = new CalculateSimulation(new FakeSolarEnergyGateway());
 
       await calculateSimulation.execute(
+        locale,
         JSON.stringify({
           powerDistributorId: 1,
           email: 'user@email.com',
@@ -66,6 +70,7 @@ describe('Test CalculateSimulation usecase', () => {
       const calculateSimulation = new CalculateSimulation(new FakeSolarEnergyGateway());
 
       await calculateSimulation.execute(
+        locale,
         JSON.stringify({
           powerDistributorId: 1,
           email: 'user@email.com',
@@ -87,6 +92,7 @@ describe('Test CalculateSimulation usecase', () => {
     };
     const calculateSimulation = new CalculateSimulation(solarEnergyGatewayMock);
     const result = await calculateSimulation.execute(
+      locale,
       JSON.stringify({
         powerDistributorId: 1,
         email: 'user@email.com',
@@ -100,6 +106,7 @@ describe('Test CalculateSimulation usecase', () => {
   it('should return the best option when all is valid', async () => {
     const calculateSimulation = new CalculateSimulation(new FakeSolarEnergyGateway());
     const result = await calculateSimulation.execute(
+      locale,
       JSON.stringify({
         powerDistributorId: 1,
         email: 'user@email.com',

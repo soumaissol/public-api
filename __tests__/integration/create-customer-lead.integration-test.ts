@@ -50,6 +50,38 @@ describe('IntegrationTest CreateCustomerLead', () => {
   );
 
   it(
+    'should return translated error when sales agent is not found',
+    async () => {
+      const salesAgentLicenseId = '1';
+      try {
+        await axios.post(
+          `${constants.API_URL}/customerLead`,
+          {
+            phone: faker.phone.number('+## ## #####-####'),
+            email: faker.internet.email(),
+            fullName: faker.person.fullName(),
+            zip: faker.location.zipCode('########'),
+            energyConsumption: faker.number.int(10000),
+            salesAgentLicenseId,
+          },
+          {
+            headers: {
+              'Accept-Language': 'pt-br',
+            },
+          },
+        );
+      } catch (err) {
+        expect(err).toHaveProperty('response');
+        const response = (err as any).response;
+        expect(response.status).toBe(HttpStatus.BAD_REQUEST);
+        expect(response.data.code).toBe('sales_agent_not_found');
+        expect(response.data.message).toBe(`corretor não encontrado com o número ${salesAgentLicenseId}`);
+      }
+    },
+    constants.DEFAULT_TIMEOUT,
+  );
+
+  it(
     'should return new customer lead when all input is valid',
     async () => {
       const output = await axios.post(`${constants.API_URL}/customerLead`, {

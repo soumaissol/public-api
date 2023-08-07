@@ -2,6 +2,7 @@ import type { APIGatewayProxyResult } from 'aws-lambda';
 import HttpStatus from 'http-status-codes';
 
 import GenericError from '../../../domain/errors/generic-error';
+import type Locale from '../../../locale/locale';
 import InvalidInput from '../../errors/invalid-input';
 import Logger from '../../logger/logger';
 
@@ -21,7 +22,7 @@ const sendHttpOkResponse = (data: any): APIGatewayProxyResult => {
   };
 };
 
-const sendHtttpError = (err: any): APIGatewayProxyResult => {
+const sendHtttpError = (locale: Locale, err: any): APIGatewayProxyResult => {
   const logger = Logger.get();
   logger.error(`catch error ${JSON.stringify(err)}`);
 
@@ -29,10 +30,10 @@ const sendHtttpError = (err: any): APIGatewayProxyResult => {
   let body = JSON.stringify(err?.message || 'Unknow error');
 
   if (err instanceof InvalidInput) {
-    body = JSON.stringify(err);
+    body = JSON.stringify({ ...err, message: locale.translate(err.message) });
     statusCode = HttpStatus.BAD_REQUEST;
   } else if (err instanceof GenericError) {
-    body = JSON.stringify(err);
+    body = JSON.stringify(err.needsTranslation ? { ...err, message: locale.translate(err.message) } : err);
     statusCode = HttpStatus.BAD_REQUEST;
   }
 

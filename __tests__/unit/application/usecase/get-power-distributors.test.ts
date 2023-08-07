@@ -3,13 +3,16 @@ import InvalidInput from '../../../../src/application/errors/invalid-input';
 import GetPowerDistributors from '../../../../src/application/usecase/get-power-distributors';
 import FakeSolarEnergyGateway from '../../../../src/infra/solar-energy-gateway/fake-solar-energy-gateway';
 import type SolarEnergyGateway from '../../../../src/infra/solar-energy-gateway/solar-energy-gateway';
+import Locale from '../../../../src/locale/locale';
+
+const locale = new Locale();
 
 describe('Test GetPowerDistributors usecase', () => {
   it('should return error when input is null', async () => {
     try {
       const getPowerDistributors = new GetPowerDistributors(new FakeSolarEnergyGateway());
 
-      await getPowerDistributors.execute(null);
+      await getPowerDistributors.execute(locale, null);
     } catch (err) {
       expect(err).toEqual(new EmptyInput());
     }
@@ -19,7 +22,7 @@ describe('Test GetPowerDistributors usecase', () => {
     try {
       const getPowerDistributors = new GetPowerDistributors(new FakeSolarEnergyGateway());
 
-      await getPowerDistributors.execute('}');
+      await getPowerDistributors.execute(locale, '}');
     } catch (err) {
       expect(err).toEqual(new InvalidInput('invalid zip', 'invalid_zip'));
     }
@@ -29,7 +32,7 @@ describe('Test GetPowerDistributors usecase', () => {
     try {
       const getPowerDistributors = new GetPowerDistributors(new FakeSolarEnergyGateway());
 
-      await getPowerDistributors.execute(JSON.stringify({ zip: '123' }));
+      await getPowerDistributors.execute(locale, JSON.stringify({ zip: '123' }));
     } catch (err) {
       expect(err).toEqual(new InvalidInput('invalid zip', 'invalid_zip'));
     }
@@ -37,7 +40,7 @@ describe('Test GetPowerDistributors usecase', () => {
 
   it('should return listing when all is valid', async () => {
     const getPowerDistributors = new GetPowerDistributors(new FakeSolarEnergyGateway());
-    const result = await getPowerDistributors.execute(JSON.stringify({ zip: '12323123' }));
+    const result = await getPowerDistributors.execute(locale, JSON.stringify({ zip: '12323123' }));
     expect(result).toEqual({
       addressName: 'Rua Rubens Meireles',
       city: 'São Paulo',
@@ -59,7 +62,7 @@ describe('Test GetPowerDistributors usecase', () => {
     };
 
     const getPowerDistributors = new GetPowerDistributors(solarEnergyGatewayMock);
-    const result = await getPowerDistributors.execute(JSON.stringify({ zip: '12323123' }));
+    const result = await getPowerDistributors.execute(locale, JSON.stringify({ zip: '12323123' }));
     expect(result).toBeNull();
   });
 });

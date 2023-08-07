@@ -2,6 +2,7 @@ import { LendingCompany } from '../../domain/entity/lending-company';
 import { Simulation } from '../../domain/entity/simulation';
 import SolarEnergyInstalation from '../../domain/entity/solar-energy-instalation';
 import SolarEnergyGateway from '../../infra/solar-energy-gateway/solar-energy-gateway';
+import type Locale from '../../locale/locale';
 import CalulateSimulationInput from '../dto/input/calculate-simulation-input';
 import { convertAndValidateInput } from '../dto/input/common-input';
 import CalulateSimulationOutput from '../dto/output/calculate-simulation-output';
@@ -10,7 +11,7 @@ import Logger from '../logger/logger';
 export default class CalculateSimulation {
   constructor(readonly solarEnergyGateway: SolarEnergyGateway) {}
 
-  async execute(input: any): Promise<CalulateSimulationOutput> {
+  async execute(_: Locale, input: any): Promise<CalulateSimulationOutput> {
     const logger = Logger.get();
     const validInput = convertAndValidateInput<CalulateSimulationInput>(input, new CalulateSimulationInput(input));
 

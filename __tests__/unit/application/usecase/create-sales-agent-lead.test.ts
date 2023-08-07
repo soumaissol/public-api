@@ -4,6 +4,9 @@ import CreateSalesAgentLead from '../../../../src/application/usecase/create-sal
 import SalesAgent from '../../../../src/domain/entity/sales-agent';
 import SalesAgentLead from '../../../../src/domain/entity/sales-agent-lead';
 import SalesAgentLeadAlreadExists from '../../../../src/domain/errors/sales-agent-lead-alread-exists';
+import Locale from '../../../../src/locale/locale';
+
+const locale = new Locale();
 
 const buildFakeCrmGateway = () => {
   return {
@@ -24,7 +27,7 @@ describe('Test CreateSalesAgentLead usecase', () => {
     try {
       const createSalesAgentLead = new CreateSalesAgentLead(buildFakeCrmGateway());
 
-      await createSalesAgentLead.execute(null);
+      await createSalesAgentLead.execute(locale, null);
       expect(true).toBe(false);
     } catch (err) {
       expect(err).toEqual(new EmptyInput());
@@ -35,7 +38,7 @@ describe('Test CreateSalesAgentLead usecase', () => {
     try {
       const createSalesAgentLead = new CreateSalesAgentLead(buildFakeCrmGateway());
 
-      await createSalesAgentLead.execute(JSON.stringify({}));
+      await createSalesAgentLead.execute(locale, JSON.stringify({}));
       expect(true).toBe(false);
     } catch (err) {
       expect(err).toEqual(new InvalidInput('invalid phone', 'invalid_phone'));
@@ -46,7 +49,7 @@ describe('Test CreateSalesAgentLead usecase', () => {
     try {
       const createSalesAgentLead = new CreateSalesAgentLead(buildFakeCrmGateway());
 
-      await createSalesAgentLead.execute(JSON.stringify({ phone: '11123456789', email: 'email.com' }));
+      await createSalesAgentLead.execute(locale, JSON.stringify({ phone: '11123456789', email: 'email.com' }));
       expect(true).toBe(false);
     } catch (err) {
       expect(err).toEqual(new InvalidInput('invalid email', 'invalid_email'));
@@ -58,6 +61,7 @@ describe('Test CreateSalesAgentLead usecase', () => {
       const createSalesAgentLead = new CreateSalesAgentLead(buildFakeCrmGateway());
 
       await createSalesAgentLead.execute(
+        locale,
         JSON.stringify({
           phone: '11123456789',
           email: 'user@email.com',
@@ -75,6 +79,7 @@ describe('Test CreateSalesAgentLead usecase', () => {
       const createSalesAgentLead = new CreateSalesAgentLead(buildFakeCrmGateway());
 
       await createSalesAgentLead.execute(
+        locale,
         JSON.stringify({
           phone: '11123456789',
           email: 'user@email.com',
@@ -92,6 +97,7 @@ describe('Test CreateSalesAgentLead usecase', () => {
       const createSalesAgentLead = new CreateSalesAgentLead(buildFakeCrmGateway());
 
       await createSalesAgentLead.execute(
+        locale,
         JSON.stringify({
           phone: '11123456789',
           email: 'user@email.com',
@@ -110,6 +116,7 @@ describe('Test CreateSalesAgentLead usecase', () => {
       const createSalesAgentLead = new CreateSalesAgentLead(buildFakeCrmGateway());
 
       await createSalesAgentLead.execute(
+        locale,
         JSON.stringify({
           phone: '11123456789',
           email: 'user@email.com',
@@ -130,6 +137,7 @@ describe('Test CreateSalesAgentLead usecase', () => {
       const createSalesAgentLead = new CreateSalesAgentLead(buildFakeCrmGateway());
 
       await createSalesAgentLead.execute(
+        locale,
         JSON.stringify({
           phone: '11123456789',
           email: 'user@email.com',
@@ -175,10 +183,10 @@ describe('Test CreateSalesAgentLead usecase', () => {
     const createSalesAgentLead = new CreateSalesAgentLead(fakeCrmGateway);
 
     try {
-      await createSalesAgentLead.execute(JSON.stringify(input));
+      await createSalesAgentLead.execute(locale, JSON.stringify(input));
       expect(true).toBe(false);
     } catch (err) {
-      expect(err).toEqual(new SalesAgentLeadAlreadExists(salesAgent.licenseId!));
+      expect(err).toEqual(new SalesAgentLeadAlreadExists(locale, salesAgent.licenseId!));
 
       expect(fakeCrmGateway.findSalesAgentByLicenseId).toHaveBeenCalledTimes(1);
       expect(fakeCrmGateway.findSalesAgentByLicenseId.mock.calls[0][0]).toBe(input.licenseId);
@@ -219,7 +227,7 @@ describe('Test CreateSalesAgentLead usecase', () => {
     };
     const createSalesAgentLead = new CreateSalesAgentLead(fakeCrmGateway);
 
-    await createSalesAgentLead.execute(JSON.stringify(input));
+    await createSalesAgentLead.execute(locale, JSON.stringify(input));
 
     expect(fakeCrmGateway.findSalesAgentByLicenseId).toHaveBeenCalledTimes(1);
     expect(fakeCrmGateway.findSalesAgentByLicenseId.mock.calls[0][0]).toBe(input.licenseId);
@@ -274,7 +282,7 @@ describe('Test CreateSalesAgentLead usecase', () => {
     };
     const createSalesAgentLead = new CreateSalesAgentLead(fakeCrmGateway);
 
-    await createSalesAgentLead.execute(JSON.stringify(input));
+    await createSalesAgentLead.execute(locale, JSON.stringify(input));
 
     expect(fakeCrmGateway.findSalesAgentByLicenseId).toHaveBeenCalledTimes(0);
 
