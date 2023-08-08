@@ -1,5 +1,5 @@
-import type Locale from '../../locale/locale';
-import GenericError from './generic-error';
+import type { Locale } from 'sms-api-commons';
+import { GenericError } from 'sms-api-commons';
 
 class SalesAgentNotFound extends GenericError {
   constructor(message: string) {

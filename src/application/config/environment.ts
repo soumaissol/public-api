@@ -1,16 +1,3 @@
-enum Stage {
-  Staging = 'staging',
-  Production = 'production',
-}
-
-const getStage = (): Stage => {
-  return process.env.STAGE as Stage;
-};
-
-const isProduction = (): boolean => {
-  return getStage() === Stage.Production;
-};
-
 const getPipefyAuthToken = (): string => {
   return process.env.PIPEFY_AUTH_TOKEN || '';
 };
@@ -42,7 +29,4 @@ export {
   getPipefyCustomerTableId,
   getPipefySalesAgentLeadsPipeId,
   getPipefySalesAgentsTableId,
-  getStage,
-  isProduction,
-  Stage,
 };

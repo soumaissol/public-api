@@ -1,12 +1,12 @@
+import type { Locale } from 'sms-api-commons';
+import { convertAndValidateInput, Logger } from 'sms-api-commons';
+
 import SalesAgent from '../../domain/entity/sales-agent';
 import SalesAgentLeadAlreadExists from '../../domain/errors/sales-agent-lead-alread-exists';
 import CrmGateway from '../../infra/crm-gateway/crm-gateway';
-import type Locale from '../../locale/locale';
-import { convertAndValidateInput } from '../dto/input/common-input';
 import CreateSalesAgentLeadInput from '../dto/input/create-sales-agent-lead-input';
 import type CreateCustomerLeadOutput from '../dto/output/create-customer-lead-output';
 import CreateSalesAgentLeadOutput from '../dto/output/create-sales-agent-lead-output';
-import Logger from '../logger/logger';
 
 export default class CreateSalesAgentLead {
   constructor(readonly crmGateway: CrmGateway) {}

@@ -1,9 +1,9 @@
+import type { Locale } from 'sms-api-commons';
+import { convertAndValidateInput, Logger } from 'sms-api-commons';
+
 import SolarEnergyGateway from '../../infra/solar-energy-gateway/solar-energy-gateway';
-import type Locale from '../../locale/locale';
-import { convertAndValidateInput } from '../dto/input/common-input';
 import GetPowerDistributorsInput from '../dto/input/get-power-distributors-input';
 import { GetPowerDistributorsOutput, PowerDistributorOutput } from '../dto/output/get-power-distributors-output';
-import Logger from '../logger/logger';
 
 export default class GetPowerDistributors {
   constructor(readonly solarEnergyGateway: SolarEnergyGateway) {}

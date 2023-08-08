@@ -1,5 +1,4 @@
-import Locale from '../../locale/locale';
-import GenericError from './generic-error';
+import { GenericError, Locale } from 'sms-api-commons';
 
 export default class SalesAgentLeadAlreadExists extends GenericError {
   constructor(locale: Locale, id: string) {

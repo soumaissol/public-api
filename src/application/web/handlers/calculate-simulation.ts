@@ -1,13 +1,12 @@
 import type { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
+import { buildLocaleFromEvent, getStage, sendHttpOkResponse, sendHtttpError } from 'sms-api-commons';
 
-import { getStage } from '../../config/environment';
+import CustomLocaleProvider from '../../../locale/custom-locale-provider';
 import SolarEnergyGatewayFactory from '../../factory/solar-energy-gateway-factory';
 import CalculateSimulation from '../../usecase/calculate-simulation';
-import { buildLocaleFromEvent } from '../locale/locale-builder';
-import { sendHttpOkResponse, sendHtttpError } from './common-handlers';
 
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-  const locale = buildLocaleFromEvent(event);
+  const locale = buildLocaleFromEvent(new CustomLocaleProvider(), event);
 
   try {
     const solarEnergyGateway = new SolarEnergyGatewayFactory(getStage()).getSolarEnergyGateway();

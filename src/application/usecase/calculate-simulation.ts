@@ -1,12 +1,12 @@
+import type { Locale } from 'sms-api-commons';
+import { convertAndValidateInput, Logger } from 'sms-api-commons';
+
 import { LendingCompany } from '../../domain/entity/lending-company';
 import { Simulation } from '../../domain/entity/simulation';
 import SolarEnergyInstalation from '../../domain/entity/solar-energy-instalation';
 import SolarEnergyGateway from '../../infra/solar-energy-gateway/solar-energy-gateway';
-import type Locale from '../../locale/locale';
 import CalulateSimulationInput from '../dto/input/calculate-simulation-input';
-import { convertAndValidateInput } from '../dto/input/common-input';
 import CalulateSimulationOutput from '../dto/output/calculate-simulation-output';
-import Logger from '../logger/logger';
 
 export default class CalculateSimulation {
   constructor(readonly solarEnergyGateway: SolarEnergyGateway) {}

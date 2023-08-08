@@ -1,12 +1,12 @@
-import EmptyInput from '../../../../src/application/errors/empty-input';
-import InvalidInput from '../../../../src/application/errors/invalid-input';
+import { EmptyInput, InvalidInput, Locale } from 'sms-api-commons';
+
 import CreateSalesAgentLead from '../../../../src/application/usecase/create-sales-agent-lead';
 import SalesAgent from '../../../../src/domain/entity/sales-agent';
 import SalesAgentLead from '../../../../src/domain/entity/sales-agent-lead';
 import SalesAgentLeadAlreadExists from '../../../../src/domain/errors/sales-agent-lead-alread-exists';
-import Locale from '../../../../src/locale/locale';
+import CustomLocaleProvider from '../../../../src/locale/custom-locale-provider';
 
-const locale = new Locale();
+const locale = new Locale(new CustomLocaleProvider());
 
 const buildFakeCrmGateway = () => {
   return {

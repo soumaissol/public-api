@@ -1,5 +1,6 @@
+import { InvalidInput, Locale } from 'sms-api-commons';
+
 import CreateCustomerLeadOutput from '../../../../src/application/dto/output/create-customer-lead-output';
-import InvalidInput from '../../../../src/application/errors/invalid-input';
 import CreateCustomerLead from '../../../../src/application/usecase/create-customer-lead';
 import Customer from '../../../../src/domain/entity/customer';
 import CustomerLead from '../../../../src/domain/entity/customer-lead';
@@ -7,9 +8,9 @@ import SalesAgent from '../../../../src/domain/entity/sales-agent';
 import CustomerLeadAlreadExists from '../../../../src/domain/errors/customer-lead-alread-exists';
 import InvalidPhone from '../../../../src/domain/errors/invalid-phone';
 import SalesAgentNotFound from '../../../../src/domain/errors/sales-agent-not-found';
-import Locale from '../../../../src/locale/locale';
+import CustomLocaleProvider from '../../../../src/locale/custom-locale-provider';
 
-const locale = new Locale();
+const locale = new Locale(new CustomLocaleProvider());
 
 const buildFakeCrmGateway = () => {
   return {

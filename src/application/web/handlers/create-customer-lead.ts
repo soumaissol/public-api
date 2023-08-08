@@ -1,6 +1,8 @@
 import type { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
+import { buildLocaleFromEvent, sendHttpOkResponse, sendHtttpError } from 'sms-api-commons';
 
 import PipefyCrmGateway from '../../../infra/crm-gateway/pipefy-crm-gateway';
+import CustomLocaleProvider from '../../../locale/custom-locale-provider';
 import {
   getPipefyApiUrl,
   getPipefyAuthToken,
@@ -10,11 +12,9 @@ import {
   getPipefySalesAgentsTableId,
 } from '../../config/environment';
 import CreateCustomerLead from '../../usecase/create-customer-lead';
-import { buildLocaleFromEvent } from '../locale/locale-builder';
-import { sendHttpOkResponse, sendHtttpError } from './common-handlers';
 
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-  const locale = buildLocaleFromEvent(event);
+  const locale = buildLocaleFromEvent(new CustomLocaleProvider(), event);
 
   try {
     const crmGateway = new PipefyCrmGateway(

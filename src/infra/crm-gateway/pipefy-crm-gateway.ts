@@ -6,6 +6,7 @@ import Customer from '../../domain/entity/customer';
 import CustomerLead from '../../domain/entity/customer-lead';
 import SalesAgent from '../../domain/entity/sales-agent';
 import SalesAgentLead from '../../domain/entity/sales-agent-lead';
+import GenericCrmError from '../../domain/errors/generic-crm-error';
 import type CrmGateway from './crm-gateway';
 import type PipefyCard from './pipefy-crm-model/pipefy-card';
 import {
@@ -197,22 +198,26 @@ export default class PipefyCrmGateway implements CrmGateway {
       }
     }`;
 
-    const result = await axios.post(
-      this.apiUrl,
-      JSON.stringify({ query: mutation, variables: { fieldAttributes, tableId } }),
-      {
-        headers: this.getRequestHeaders(),
-      },
-    );
+    try {
+      const result = await axios.post(
+        this.apiUrl,
+        JSON.stringify({ query: mutation, variables: { fieldAttributes, tableId } }),
+        {
+          headers: this.getRequestHeaders(),
+        },
+      );
 
-    if (result.status !== HttpStatus.OK) {
-      throw new Error(`response with error ${result.status}: ${result.data.errors || result.data.message}`);
-    }
-    if (result.data.errors) {
-      throw new Error(`errors data returned: ${JSON.stringify(result.data.errors)}`);
-    }
+      if (result.status !== HttpStatus.OK) {
+        throw new GenericCrmError(`response with error ${result.status}: ${result.data.errors || result.data.message}`);
+      }
+      if (result.data.errors) {
+        throw new GenericCrmError(`errors data returned: ${JSON.stringify(result.data.errors)}`);
+      }
 
-    return result.data.data.createTableRecord.table_record as PipefyTableRecord;
+      return result.data.data.createTableRecord.table_record as PipefyTableRecord;
+    } catch (err) {
+      throw this.buildResponseError(err);
+    }
   }
 
   async findRecord(tableId: string, search: PipefySearchInput): Promise<PipefyEdge | undefined> {
@@ -235,18 +240,22 @@ export default class PipefyCrmGateway implements CrmGateway {
           }
         }
       }`;
-    const result = await axios.post(this.apiUrl, JSON.stringify({ query, variables: { ...search, tableId } }), {
-      headers: this.getRequestHeaders(),
-    });
-    if (result.status !== HttpStatus.OK) {
-      throw new Error(`response with error ${result.status}: ${result.data.errors || result.data.message}`);
-    }
-    if (result.data.errors) {
-      throw new Error(`errors data returned: ${JSON.stringify(result.data.errors)}`);
-    }
+    try {
+      const result = await axios.post(this.apiUrl, JSON.stringify({ query, variables: { ...search, tableId } }), {
+        headers: this.getRequestHeaders(),
+      });
+      if (result.status !== HttpStatus.OK) {
+        throw new GenericCrmError(`response with error ${result.status}: ${result.data.errors || result.data.message}`);
+      }
+      if (result.data.errors) {
+        throw new GenericCrmError(`errors data returned: ${JSON.stringify(result.data.errors)}`);
+      }
 
-    const edges = result.data.data.findRecords.edges as PipefyEdge[];
-    return edges.shift();
+      const edges = result.data.data.findRecords.edges as PipefyEdge[];
+      return edges.shift();
+    } catch (err) {
+      throw this.buildResponseError(err);
+    }
   }
 
   async createCard(pipeId: string, fieldAttributes: PipefyFieldAttribute[]): Promise<PipefyCard> {
@@ -260,22 +269,38 @@ export default class PipefyCrmGateway implements CrmGateway {
       }
     }`;
 
-    const result = await axios.post(
-      this.apiUrl,
-      JSON.stringify({ query: mutation, variables: { fieldAttributes, pipeId } }),
-      {
-        headers: this.getRequestHeaders(),
-      },
-    );
+    try {
+      const result = await axios.post(
+        this.apiUrl,
+        JSON.stringify({ query: mutation, variables: { fieldAttributes, pipeId } }),
+        {
+          headers: this.getRequestHeaders(),
+        },
+      );
 
-    if (result.status !== HttpStatus.OK) {
-      throw new Error(`response with error ${result.status}: ${result.data.errors || result.data.message}`);
+      if (result.status !== HttpStatus.OK) {
+        throw new GenericCrmError(`response with error ${result.status}: ${result.data.errors || result.data.message}`);
+      }
+      if (result.data.errors) {
+        throw new GenericCrmError(`errors data returned: ${JSON.stringify(result.data.errors)}`);
+      }
+      return result.data.data.createCard.card as PipefyCard;
+    } catch (err) {
+      throw this.buildResponseError(err);
     }
-    if (result.data.errors) {
-      throw new Error(`errors data returned: ${JSON.stringify(result.data.errors)}`);
+  }
+
+  private buildResponseError(err: any): Error {
+    if (err.response) {
+      const response = (err as any).response;
+      let message = response.data.errors || response.data.message;
+      if (response.data.length) {
+        message = response.data[0].message || JSON.stringify(response.data[0]);
+      }
+      return new GenericCrmError(`response status ${response.status}, message ${message}`);
     }
 
-    return result.data.data.createCard.card as PipefyCard;
+    return new GenericCrmError(`response error ${err.message}`);
   }
 
   async findCard(pipeId: string, search: PipefySearchInput): Promise<PipefyEdge | undefined> {
@@ -296,18 +321,22 @@ export default class PipefyCrmGateway implements CrmGateway {
             }
           }
       }`;
-    const result = await axios.post(this.apiUrl, JSON.stringify({ query, variables: { ...search, pipeId } }), {
-      headers: this.getRequestHeaders(),
-    });
-    if (result.status !== HttpStatus.OK) {
-      throw new Error(`response with error ${result.status}: ${result.data.errors || result.data.message}`);
-    }
-    if (result.data.errors) {
-      throw new Error(`errors data returned: ${JSON.stringify(result.data.errors)}`);
-    }
+    try {
+      const result = await axios.post(this.apiUrl, JSON.stringify({ query, variables: { ...search, pipeId } }), {
+        headers: this.getRequestHeaders(),
+      });
+      if (result.status !== HttpStatus.OK) {
+        throw new GenericCrmError(`response with error ${result.status}: ${result.data.errors || result.data.message}`);
+      }
+      if (result.data.errors) {
+        throw new GenericCrmError(`errors data returned: ${JSON.stringify(result.data.errors)}`);
+      }
 
-    const edges = result.data.data.findCards.edges as PipefyEdge[];
-    return edges.shift();
+      const edges = result.data.data.findCards.edges as PipefyEdge[];
+      return edges.shift();
+    } catch (err) {
+      throw this.buildResponseError(err);
+    }
   }
 
   getRequestHeaders(): AxiosRequestHeaders {

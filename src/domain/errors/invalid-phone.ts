@@ -1,4 +1,4 @@
-import GenericError from './generic-error';
+import { GenericError } from 'sms-api-commons';
 
 class InvalidPhone extends GenericError {
   constructor() {

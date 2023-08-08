@@ -1,11 +1,11 @@
-import EmptyInput from '../../../../src/application/errors/empty-input';
-import InvalidInput from '../../../../src/application/errors/invalid-input';
+import { EmptyInput, InvalidInput, Locale } from 'sms-api-commons';
+
 import CalculateSimulation from '../../../../src/application/usecase/calculate-simulation';
 import FakeSolarEnergyGateway from '../../../../src/infra/solar-energy-gateway/fake-solar-energy-gateway';
 import type SolarEnergyGateway from '../../../../src/infra/solar-energy-gateway/solar-energy-gateway';
-import Locale from '../../../../src/locale/locale';
+import CustomLocaleProvider from '../../../../src/locale/custom-locale-provider';
 
-const locale = new Locale();
+const locale = new Locale(new CustomLocaleProvider());
 
 describe('Test CalculateSimulation usecase', () => {
   it('should return error when input is null', async () => {
