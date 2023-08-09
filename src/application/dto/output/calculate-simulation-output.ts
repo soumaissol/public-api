@@ -3,5 +3,7 @@ export default class CalulateSimulationOutput {
     readonly monthlyLoanInstallmentAmount: number,
     readonly monthlyLoanInstallments: number,
     readonly paybackInMonths: number,
+    readonly estimatedCost: number,
+    readonly annualSavings: number,
   ) {}
 }

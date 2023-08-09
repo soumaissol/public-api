@@ -100,7 +100,13 @@ describe('Test CalculateSimulation usecase', () => {
         zip: '12323123',
       }),
     );
-    expect(result).toEqual({ monthlyLoanInstallmentAmount: 193.33, monthlyLoanInstallments: 60, paybackInMonths: 61 });
+    expect(result).toEqual({
+      monthlyLoanInstallmentAmount: 171.26,
+      monthlyLoanInstallments: 60,
+      paybackInMonths: 61,
+      estimatedCost: 6100,
+      annualSavings: 100.0 * 12,
+    });
   });
 
   it('should return the best option when all is valid', async () => {
@@ -114,6 +120,12 @@ describe('Test CalculateSimulation usecase', () => {
         zip: '12323123',
       }),
     );
-    expect(result).toEqual({ monthlyLoanInstallmentAmount: 530.58, monthlyLoanInstallments: 60, paybackInMonths: 168 });
+    expect(result).toEqual({
+      monthlyLoanInstallmentAmount: 470.02,
+      monthlyLoanInstallments: 60,
+      paybackInMonths: 168,
+      estimatedCost: 16741.28006,
+      annualSavings: 200.0 * 12,
+    });
   });
 });

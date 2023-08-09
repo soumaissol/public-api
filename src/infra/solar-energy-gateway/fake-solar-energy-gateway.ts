@@ -15,6 +15,6 @@ export default class FakeSolarEnergyGateway implements SolarEnergyGateway {
   }
 
   calculateInstallationSimulation(): Promise<SolarEnergyInstalation> {
-    return Promise.resolve(new SolarEnergyInstalation(200.0, 16741.28006));
+    return Promise.resolve(new SolarEnergyInstalation(200.0, 16741.28006, 200.0 * 12));
   }
 }

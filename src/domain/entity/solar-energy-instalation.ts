@@ -30,12 +30,13 @@ class SolarEnergyInstalation {
         break;
       }
     }
-    return new SolarEnergyInstalation(energyConsumption, multiplier * energyConsumption);
+    return new SolarEnergyInstalation(energyConsumption, multiplier * energyConsumption, 12 * energyConsumption);
   }
 
   constructor(
     readonly lightBill: number,
     readonly estimatedCost: number,
+    readonly annualSavings: number,
   ) {}
 }
 

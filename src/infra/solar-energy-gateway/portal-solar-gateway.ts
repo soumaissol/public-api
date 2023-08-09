@@ -59,6 +59,10 @@ export default class PortalSolarEnergyGateway implements SolarEnergyGateway {
       throw new Error(`no data returned: ${result.data.message}`);
     }
 
-    return new SolarEnergyInstalation(parseFloat(result.data.light_bill), parseFloat(result.data.estimated_cost));
+    return new SolarEnergyInstalation(
+      parseFloat(result.data.light_bill),
+      parseFloat(result.data.estimated_cost),
+      parseFloat(result.data.annual_savings),
+    );
   }
 }

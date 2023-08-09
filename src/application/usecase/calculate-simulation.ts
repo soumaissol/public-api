@@ -26,7 +26,7 @@ export default class CalculateSimulation {
       logger.warn(`error on solarEnergyGateway: ${err.message}`);
     }
 
-    const lendingCompany = new LendingCompany(0.0241);
+    const lendingCompany = new LendingCompany(0.019);
     const simulation = new Simulation(lendingCompany, validInput.energyConsumption);
 
     const bestSimulationOption = simulation.simulateLoanForClient(solarEnergyInstalation.estimatedCost);
@@ -35,6 +35,8 @@ export default class CalculateSimulation {
       bestSimulationOption.fixedMonthlyAmount,
       bestSimulationOption.installments,
       bestSimulationOption.paybackInMonths,
+      solarEnergyInstalation.estimatedCost,
+      solarEnergyInstalation.annualSavings,
     );
   }
 }
